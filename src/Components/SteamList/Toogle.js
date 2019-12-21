@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+/* eslint-disable */
 
 const Toogle = ({ handleFav }) => (
   <>

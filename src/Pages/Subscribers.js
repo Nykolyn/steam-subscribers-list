@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CircularProgress } from '@material-ui/core';
@@ -7,6 +8,7 @@ import { CircularProgress } from '@material-ui/core';
 import SteamForm from '../Components/SteamList/SteamForm';
 import SteamList from '../Components/SteamList/SteamList';
 import { getSubs, postSub, updateFav } from '../services/subsApi';
+import authSelector from '../redux/selectors/authSelectors';
 /* eslint-disable */
 
 const filterSubs = (arr, query = '') =>
@@ -142,4 +144,8 @@ Subscribers.propTypes = {
   isAuth: PropTypes.bool.isRequired,
 };
 
-export default Subscribers;
+const mapSTP = state => ({
+  isAuth: authSelector(state),
+});
+
+export default connect(mapSTP)(Subscribers);

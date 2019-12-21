@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = 'https://steam-subscribtions.herokuapp.com/subscribers';
+const URL = process.env.REACT_APP_URL;
 
 export const getSubs = () =>
   axios.get(URL).then(response => response.data.subs);
