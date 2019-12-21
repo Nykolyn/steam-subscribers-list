@@ -1,0 +1,17 @@
+.pop-trsn-enter {
+  transform: scale(0);
+}
+
+.pop-trsn-enter-active {
+  transform: scale(1);
+  transition: transform 200ms ease-in-out;
+}
+
+.pop-trsn-exit {
+  transform: scale(1);
+}
+
+.pop-trsn-exit-active {
+  transform: scale(0);
+  transition: transform 200ms ease-in-out;
+}

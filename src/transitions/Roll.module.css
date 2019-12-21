@@ -1,0 +1,20 @@
+.enter {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0) rotate3d(0, 0, 1, -120deg);
+}
+
+.enterActive {
+  transition: all 1000ms;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.exit {
+  opacity: 1;
+}
+
+.exitActive {
+  transition: all 1000ms;
+  opacity: 0;
+  transform: translate3d(100%, 0, 0) rotate3d(0, 0, 1, 120deg);
+}
