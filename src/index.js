@@ -12,5 +12,5 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'),
 );
-/* eslint-disable-next-line */
+
 console.log(process.env.NODE_ENV);
