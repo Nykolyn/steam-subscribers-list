@@ -1,20 +1,23 @@
 @import './steamList.scss';
 @import './mouse-trail.scss';
+@import './loaders/react-loader.scss';
 @import './buttons/jelly-button.scss';
 @import './animated-gradient.scss';
 @import './super-slide.scss';
 @import './blazing.scss';
 @import '../Components/canvasBackground/stars.scss';
 @import './cool-toggle.scss';
+@import './transitions/bounceInLeft.scss';
 
 * {
   box-sizing: border-box;
 }
 
-.material-loader {
+.material-subs-loader {
   width: 200px !important;
   height: 200px !important;
   left: 45%;
+  top: 45%;
   position: fixed;
 }
 

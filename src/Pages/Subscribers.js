@@ -1,14 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CircularProgress } from '@material-ui/core';
 
-import SteamForm from '../Components/SteamList/SteamForm';
+import SteamForm, {
+  toastError,
+  toastSuccess,
+} from '../Components/SteamList/SteamForm';
 import SteamList from '../Components/SteamList/SteamList';
-import { getSubs, postSub, updateFav } from '../services/subsApi';
-import authSelector from '../redux/selectors/authSelectors';
+import {
+  getSubs,
+  addSub,
+  updateFavSub,
+} from '../redux/operations/subscribtionsOperations';
+import { authSelector } from '../redux/selectors/authSelectors';
+import {
+  subsSelector,
+  subsLoadSelector,
+  addSubLoadSelector,
+  updateFavSubLoadSelector,
+} from '../redux/selectors/subscribtionSelectors';
 /* eslint-disable */
 
 const filterSubs = (arr, query = '') =>
@@ -20,34 +33,37 @@ const filterSubs = (arr, query = '') =>
 
 class Subscribers extends Component {
   state = {
-    subs: [],
     query: '',
     showFavorites: false,
     onChangeText: 'Show favourites',
-    loadingSubs: false,
   };
 
   componentDidMount() {
-    const { isAuth } = this.props;
+    const { isAuth, getSubs } = this.props;
 
     if (!isAuth) return;
-    getSubs().then(data => this.setState({ subs: data }));
+    getSubs();
   }
 
-  async componentDidUpdate(prevProps) {
-    const { isAuth } = this.props;
+  componentDidUpdate(prevProps) {
+    const { isAuth, getSubs } = this.props;
 
     if (prevProps.isAuth !== isAuth && isAuth) {
-      await this.setState({ loadingSubs: true });
-      getSubs().then(data => {
-        this.setState({ subs: data, loadingSubs: false });
-      });
+      getSubs();
     }
   }
 
   handleSubmit = sub => {
-    const { isAuth } = this.props;
+    const { isAuth, addSub, subs } = this.props;
     if (!isAuth) return;
+
+    const subAlreadyExists = subs.find(
+      el =>
+        el.name.toLowerCase().trim() === sub.name.toLocaleLowerCase().trim() ||
+        el.userID === sub.userID.trim(),
+    );
+
+    if (subAlreadyExists) return toastError();
 
     const subToAdd = {
       favorite: false,
@@ -55,14 +71,16 @@ class Subscribers extends Component {
       ...sub,
     };
 
-    postSub(subToAdd).then(addedTask =>
-      this.setState(state => ({ subs: [...state.subs, addedTask] })),
-    );
+    addSub(subToAdd).then(res => {
+      if (!res) return;
+
+      toastSuccess(subs.length + 1);
+    });
   };
 
   handleFilterSubs = e => this.setState({ query: e.target.value });
 
-  filterFavorites = () => this.state.subs.filter(el => el.favorite);
+  filterFavorites = () => this.props.subs.filter(el => el.favorite);
 
   showFavorites = () =>
     this.setState(state => ({
@@ -71,34 +89,17 @@ class Subscribers extends Component {
     }));
 
   handleFavoriteChange = (id, favorite) => {
-    updateFav(id, { favorite: !favorite }).then(updatedFav => {
-      this.setState(
-        state => ({
-          subs: state.subs.map(sub => (sub._id === id ? updatedFav : sub)),
-        }),
-        () => {
-          if (favorite === false) toast.success('Added to favorites');
-          if (favorite === true) toast.success('Removed from favorites');
-        },
-      );
-    });
+    const { updateFavSub } = this.props;
+    updateFavSub(id, { favorite: !favorite });
   };
 
   render() {
-    const {
-      subs,
-      query,
-      showFavorites,
-      onChangeText,
-      loadingSubs,
-    } = this.state;
+    const { query, showFavorites, onChangeText } = this.state;
+    const { subs, subsLoad } = this.props;
     const filteredSubs = filterSubs(subs, query);
 
     return (
-      <div className="stars-back">
-        <div id="stars" />
-        <div id="stars2" />
-        <div id="stars3" />
+      <div>
         <SteamForm
           handleSubmit={this.handleSubmit}
           query={query}
@@ -106,8 +107,11 @@ class Subscribers extends Component {
           showFavorites={this.showFavorites}
           onChangeText={onChangeText}
         />
-        {loadingSubs ? (
-          <CircularProgress className="material-loader" color="secondary" />
+        {subsLoad ? (
+          <CircularProgress
+            className="material-subs-loader"
+            color="secondary"
+          />
         ) : showFavorites ? (
           <>
             <div className="subs-length-wrap">
@@ -142,10 +146,30 @@ class Subscribers extends Component {
 
 Subscribers.propTypes = {
   isAuth: PropTypes.bool.isRequired,
+  getSubs: PropTypes.func.isRequired,
+  addSub: PropTypes.func.isRequired,
+  subs: PropTypes.array.isRequired,
+  updateFavSub: PropTypes.func.isRequired,
+  subsLoad: PropTypes.bool.isRequired,
+  addSubLoad: PropTypes.bool.isRequired,
+  updFavSubLoad: PropTypes.bool.isRequired,
 };
 
 const mapSTP = state => ({
   isAuth: authSelector(state),
+  subs: subsSelector(state),
+  subsLoad: subsLoadSelector(state),
+  addSubLoad: addSubLoadSelector(state),
+  updFavSubLoad: updateFavSubLoadSelector(state),
 });
 
-export default connect(mapSTP)(Subscribers);
+const mDTP = {
+  getSubs,
+  addSub,
+  updateFavSub,
+};
+
+export default connect(
+  mapSTP,
+  mDTP,
+)(Subscribers);

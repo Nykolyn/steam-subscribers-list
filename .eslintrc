@@ -25,6 +25,11 @@
   },
   "rules": {
     "no-console": 0,
+    "no-shadow": [0, {
+      "builtinGlobals": false,
+      "hoist": "functions",
+      "allow": []
+    }],
     "linebreak-style": ["error", "unix"],
     "react/jsx-filename-extension": [1, {
       "extensions": [".js", ".jsx"]

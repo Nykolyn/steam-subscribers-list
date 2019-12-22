@@ -27,7 +27,7 @@ export default function FormDialog({ submitPassword }) {
       <form onSubmit={handleSubmit}>
         <DialogContent>
           <DialogContentText>
-            To proceed please enter a valid password
+            To proceed please enter the password
           </DialogContentText>
           <TextField
             autoFocus
