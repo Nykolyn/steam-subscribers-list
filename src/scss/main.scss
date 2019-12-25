@@ -8,7 +8,7 @@
 @import '../Components/canvasBackground/stars.scss';
 @import './cool-toggle.scss';
 @import './transitions/bounceInLeft.scss';
-
+@import './pagination.scss';
 * {
   box-sizing: border-box;
 }
@@ -44,7 +44,7 @@ p {
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 

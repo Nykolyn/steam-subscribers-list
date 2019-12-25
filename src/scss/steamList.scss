@@ -12,7 +12,7 @@
   align-items: center;
   margin: 0 auto;
   width: 900px;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 
   &__input {
     border: none;
@@ -43,12 +43,13 @@
 .subs-length-wrap {
   position: fixed;
   z-index: 3;
-  top: 200px;
-  left: 100px;
-  width: 150px;
+  top: 14%;
+  left: 12%;
+  // width: 150px;
 
   .subs-length-text {
     font-size: 25px;
+    text-decoration: underline;
     font-family: 'Great Vibes', cursive;
     color: #fff;
   }
@@ -58,9 +59,8 @@
   display: flex;
   font-family: 'Cormorant Garamond', serif;
   font-weight: 400;
-  // height: 800px;
-  // overflow: auto;
-  overflow-x: hidden;
+  height: 620px;
+  overflow: hidden;
   padding: 30px;
   justify-content: space-between;
   align-items: center;
@@ -70,11 +70,13 @@
   z-index: 3;
 
   &__item {
-    min-width: 300px;
-    border: 1px solid #ffd90060;
+    max-width: 25%;
+    min-width: 326px;
+    // border: 1px solid #ffd90060;
     // background-color: rgba(207, 207, 207, 0.479);
-    border-radius: 20px;
+    // border-radius: 20px;
     color: rgb(209, 208, 208);
+    transform: rotateX(50deg);
     padding: 20px;
     margin-bottom: 20px;
     margin-right: 20px;
@@ -86,6 +88,7 @@
     align-items: center;
 
     &:hover {
+      border-color: white;
       transform: translateX(-10px) scale(1.1) rotateX(10deg);
       box-shadow: 6px 6px 11px -2px rgba(107, 107, 107, 1);
     }

@@ -22,6 +22,8 @@ import {
   addSubLoadSelector,
   updateFavSubLoadSelector,
 } from '../redux/selectors/subscribtionSelectors';
+import { START_PAGE, PER_PAGE_SUCBSCRIPTIONS_LIST } from '../helpers/constants';
+import Pagination from '../Components/SteamList/Pagination';
 /* eslint-disable */
 
 const filterSubs = (arr, query = '') =>
@@ -36,6 +38,8 @@ class Subscribers extends Component {
     query: '',
     showFavorites: false,
     onChangeText: 'Show favourites',
+    perPage: PER_PAGE_SUCBSCRIPTIONS_LIST,
+    currentPage: START_PAGE,
   };
 
   componentDidMount() {
@@ -45,13 +49,30 @@ class Subscribers extends Component {
     getSubs();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const { isAuth, getSubs } = this.props;
+    const { query, currentPage } = this.state;
 
     if (prevProps.isAuth !== isAuth && isAuth) {
       getSubs();
     }
+
+    if (prevState.query !== query) {
+      const minPage = this.renderSubsList().length <= 20;
+      if (currentPage > this.maxPage()) {
+        this.setState({ currentPage: this.maxPage() });
+      }
+      if (currentPage < minPage || currentPage < 1) {
+        this.setState({ currentPage: minPage });
+      }
+    }
   }
+
+  maxPage = () => {
+    return Math.ceil(
+      this.renderSubsList().length / PER_PAGE_SUCBSCRIPTIONS_LIST,
+    );
+  };
 
   handleSubmit = sub => {
     const { isAuth, addSub, subs } = this.props;
@@ -93,13 +114,55 @@ class Subscribers extends Component {
     updateFavSub(id, { favorite: !favorite });
   };
 
+  filteredSubs = (subs, query) => filterSubs(subs, query);
+
+  showTotalAmmountOfSubs = () => {
+    const { subs } = this.props;
+    const { showFavorites, query } = this.state;
+
+    return showFavorites
+      ? this.filteredSubs(this.filterFavorites(), query).length
+      : this.filteredSubs(subs, query).length;
+  };
+
+  renderSubsList = () => {
+    const { subs } = this.props;
+    const { showFavorites, query } = this.state;
+
+    return showFavorites
+      ? this.filteredSubs(this.filterFavorites(), query)
+      : this.filteredSubs(subs, query);
+  };
+
+  handleChangePage = name => {
+    this.setState(state => ({
+      currentPage:
+        name === 'next' ? state.currentPage + 1 : state.currentPage - 1,
+    }));
+  };
+
+  renderPaginationList = () => {
+    const { currentPage, perPage } = this.state;
+    const list = [...this.renderSubsList().reverse()];
+
+    const indexOfLastSub = currentPage * perPage;
+    const indexOfFirstSub = indexOfLastSub - perPage;
+    return list.slice(indexOfFirstSub, indexOfLastSub);
+  };
+
   render() {
-    const { query, showFavorites, onChangeText } = this.state;
-    const { subs, subsLoad } = this.props;
-    const filteredSubs = filterSubs(subs, query);
+    const { query, onChangeText, currentPage } = this.state;
+    const { subsLoad } = this.props;
 
     return (
       <div>
+        {subsLoad && (
+          <CircularProgress
+            className="material-subs-loader"
+            color="secondary"
+          />
+        )}
+
         <SteamForm
           handleSubmit={this.handleSubmit}
           query={query}
@@ -107,35 +170,23 @@ class Subscribers extends Component {
           showFavorites={this.showFavorites}
           onChangeText={onChangeText}
         />
-        {subsLoad ? (
-          <CircularProgress
-            className="material-subs-loader"
-            color="secondary"
+
+        <div className="subs-length-wrap">
+          <p className="subs-length-text">
+            Total length: {this.showTotalAmmountOfSubs()}
+          </p>
+        </div>
+        <SteamList
+          subscribers={this.renderPaginationList()}
+          handleFavChange={this.handleFavoriteChange}
+        />
+
+        {this.renderSubsList().length > 20 && (
+          <Pagination
+            currentPage={currentPage}
+            maxPage={this.maxPage}
+            handleChangePage={this.handleChangePage}
           />
-        ) : showFavorites ? (
-          <>
-            <div className="subs-length-wrap">
-              <p className="subs-length-text">
-                Total length: {this.filterFavorites().length}
-              </p>
-            </div>
-            <SteamList
-              subscribers={this.filterFavorites()}
-              handleFavChange={this.handleFavoriteChange}
-            />
-          </>
-        ) : (
-          <>
-            <div className="subs-length-wrap">
-              <p className="subs-length-text">
-                Total length: {filteredSubs.length}
-              </p>
-            </div>
-            <SteamList
-              subscribers={filteredSubs.reverse().slice(0, 20)}
-              handleFavChange={this.handleFavoriteChange}
-            />
-          </>
         )}
 
         <ToastContainer />
