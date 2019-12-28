@@ -15,7 +15,7 @@ import {
   addSub,
   updateFavSub,
 } from '../redux/operations/subscribtionsOperations';
-import { authSelector } from '../redux/selectors/authSelectors';
+import { authSelector, idSelector } from '../redux/selectors/authSelectors';
 import {
   subsSelector,
   subsLoadSelector,
@@ -42,18 +42,17 @@ class Subscribers extends Component {
   };
 
   componentDidMount() {
-    const { isAuth, getSubs } = this.props;
-
+    const { isAuth, getSubs, ownerId } = this.props;
     if (!isAuth) return;
-    getSubs();
+    getSubs(ownerId);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { isAuth, getSubs } = this.props;
+    const { isAuth, getSubs, ownerId } = this.props;
     const { query } = this.state;
 
     if (prevProps.isAuth !== isAuth && isAuth) {
-      getSubs();
+      getSubs(ownerId);
     }
 
     if (prevState.query !== query) {
@@ -78,9 +77,9 @@ class Subscribers extends Component {
   };
 
   handleSubmit = sub => {
-    const { isAuth, addSub, subs } = this.props;
+    const { isAuth, addSub, subs, ownerId } = this.props;
     if (!isAuth) return;
-
+    console.log(ownerId);
     const subAlreadyExists = subs.find(
       el =>
         el.name.toLowerCase().trim() === sub.name.toLocaleLowerCase().trim() ||
@@ -94,6 +93,7 @@ class Subscribers extends Component {
         favorite: false,
         date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
         ...sub,
+        ownerId,
       };
 
       addSub(subToAdd).then(res => {
@@ -207,6 +207,7 @@ Subscribers.propTypes = {
   subs: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   updateFavSub: PropTypes.func.isRequired,
   subsLoad: PropTypes.bool.isRequired,
+  ownerId: PropTypes.string.isRequired,
 };
 
 const mapSTP = state => ({
@@ -215,6 +216,7 @@ const mapSTP = state => ({
   subsLoad: subsLoadSelector(state),
   addSubLoad: addSubLoadSelector(state),
   updFavSubLoad: updateFavSubLoadSelector(state),
+  ownerId: idSelector(state),
 });
 
 const mDTP = {

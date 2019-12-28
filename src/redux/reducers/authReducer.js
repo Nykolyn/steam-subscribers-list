@@ -12,10 +12,20 @@ const isAuth = (state = false, { type }) => {
   }
 };
 
+const user = (state = {}, { type, payload }) => {
+  switch (type) {
+    case AUTH_ACTIONS.ACCESS_GRANTED:
+      return payload.user.user;
+
+    default:
+      return state;
+  }
+};
+
 const token = (state = '', { type, payload }) => {
   switch (type) {
     case AUTH_ACTIONS.ACCESS_GRANTED:
-      return payload.token;
+      return payload.user.token;
 
     default:
       return state;
@@ -36,4 +46,16 @@ const loading = (state = false, { type }) => {
   }
 };
 
-export default combineReducers({ isAuth, token, loading });
+const error = (state = null, { type, payload }) => {
+  switch (type) {
+    case AUTH_ACTIONS.ACCESS_DENIED:
+      return payload.err.message;
+    case AUTH_ACTIONS.ACCESS_GRANTED:
+    case AUTH_ACTIONS.CLEAR_ERROR_MSG:
+      return null;
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({ isAuth, user, token, loading, error });

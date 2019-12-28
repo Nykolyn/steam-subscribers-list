@@ -1,35 +1,54 @@
+import jwtDecode from 'jwt-decode';
+
 import {
   loginRequest,
   loginDenied,
   loginSuccess,
-  refreshAdminStart,
+  refreshUserStart,
+  refreshUserSuccess,
+  refreshUserError,
+  signUpRequest,
+  signUpSuccess,
+  signUpError,
 } from '../actions/authActions';
-import { signInApi } from '../../services/subsApi';
-import { tokenSelector } from '../selectors/authSelectors';
+import { signInApi, refreshUserApi, signUpApi } from '../../services/authApi';
+import setAuthToken from '../../helpers/setAuthToken';
+import { setToLS, getFromLS } from '../../helpers/localStorage';
 
 export const signIn = user => async dispatch => {
   dispatch(loginRequest());
 
   try {
     const response = await signInApi(user);
+    if (user.rememberMe) setToLS('token', response.token);
     dispatch(loginSuccess(response));
   } catch (err) {
-    dispatch(loginDenied(err));
+    dispatch(loginDenied(err.response.data));
   }
 };
 
-export const signUp = user => async dispatch => {};
+export const signUp = user => async dispatch => {
+  dispatch(signUpRequest());
 
-export const refreshUser = () => async (dispatch, getState) => {
-  const token = tokenSelector(getState());
-  if (!token) return;
-  dispatch(refreshAdminStart());
   try {
-    const response = await signInApi({
-      password: process.env.REACT_APP_PASSWORD,
-    });
-    dispatch(loginSuccess(response.token));
+    const response = await signUpApi(user);
+    if (user.rememberMe) setToLS('token', response.token);
+    dispatch(signUpSuccess(response));
   } catch (err) {
-    dispatch(loginDenied(err));
+    dispatch(signUpError(err.response.data));
+  }
+};
+
+export const refreshUser = () => async dispatch => {
+  const token = getFromLS('token');
+  if (!token) return;
+  setAuthToken(token);
+  dispatch(refreshUserStart());
+  try {
+    const decoded = jwtDecode(token);
+    const response = await refreshUserApi(decoded.id);
+    dispatch(refreshUserSuccess(response));
+  } catch (err) {
+    dispatch(refreshUserError(err));
   }
 };

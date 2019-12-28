@@ -1,6 +1,8 @@
 import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { Dialog } from '@material-ui/core';
+
+import AuthRedirect from '../../HOC/AuthRedirect';
 import { authRoutes } from '../../routes';
 
 const FormDialog = () => {
@@ -25,4 +27,4 @@ const FormDialog = () => {
   );
 };
 
-export default FormDialog;
+export default AuthRedirect(FormDialog);

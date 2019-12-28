@@ -1,10 +1,11 @@
-import React, { useEffect, Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { CircularProgress } from '@material-ui/core';
 
 import MouseTrail from './MouseTrail';
+import ProtectedComponent from '../HOC/ProtectedComponent';
 import { refreshUser } from '../redux/operations/authOperations';
 import {
   authSelector,
@@ -14,15 +15,14 @@ import { dashboardRoutes } from '../routes';
 
 const AuthComponent = React.lazy(() => import('../Pages/Auth/Auth'));
 
-const App = ({ isAuth, refreshUser, loading }) => {
+const App = ({ refreshUser }) => {
   useEffect(() => {
     refreshUser();
     /* eslint-disable-next-line */
   }, []);
-
   const renderDashboardRoutes = () => {
     return dashboardRoutes.map(route => (
-      <Route
+      <ProtectedComponent
         key={route.path}
         path={route.path}
         component={route.component}
@@ -47,14 +47,9 @@ const App = ({ isAuth, refreshUser, loading }) => {
       >
         <Switch>
           {renderDashboardRoutes()}
-          {loading ? (
-            <CircularProgress
-              className="material-subs-loader"
-              color="secondary"
-            />
-          ) : (
-            !isAuth && <Route path="/auth" component={AuthComponent} />
-          )}
+
+          <Route path="/auth" component={AuthComponent} />
+
           <Redirect to="/auth" />
         </Switch>
       </Suspense>
@@ -63,9 +58,9 @@ const App = ({ isAuth, refreshUser, loading }) => {
 };
 
 App.propTypes = {
-  isAuth: PropTypes.bool.isRequired,
+  // isAuth: PropTypes.bool.isRequired,
   refreshUser: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
+  // loading: PropTypes.bool.isRequired,
 };
 
 const mSTP = state => ({

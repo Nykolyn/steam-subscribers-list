@@ -1,10 +1,8 @@
 export const AUTH_ACTIONS = {
-  ACCESS_GRANTED: 'ACCESS_GRANTED',
   ACCESS_REQUEST: 'ACCESS_REQUEST',
+  ACCESS_GRANTED: 'ACCESS_GRANTED',
   ACCESS_DENIED: 'ACCESS_DENIED',
-  REFRESH_ADMIN_START: 'REFRESH_ADMIN_START',
-  REFRESH_ADMIN_SUCCESS: 'REFRESH_ADMIN_SUCCESS',
-  REFRESH_ADMIN_ERROR: 'REFRESH_ADMIN_ERROR',
+  CLEAR_ERROR_MSG: 'CREAR_ERROR_MSG',
 };
 
 //
@@ -12,9 +10,9 @@ export const loginRequest = () => ({
   type: AUTH_ACTIONS.ACCESS_REQUEST,
 });
 
-export const loginSuccess = token => ({
-  type: 'ACCESS_GRANTED',
-  payload: { token },
+export const loginSuccess = user => ({
+  type: AUTH_ACTIONS.ACCESS_GRANTED,
+  payload: { user },
 });
 
 export const loginDenied = err => ({
@@ -24,17 +22,39 @@ export const loginDenied = err => ({
 //
 
 //
-export const refreshAdminStart = () => ({
+export const refreshUserStart = () => ({
   type: AUTH_ACTIONS.ACCESS_REQUEST,
 });
 
-export const refreshAdminSuccess = token => ({
-  type: 'ACCESS_GRANTED',
-  payload: { token },
+export const refreshUserSuccess = user => ({
+  type: AUTH_ACTIONS.ACCESS_GRANTED,
+  payload: { user },
 });
 
-export const refreshAdminError = err => ({
+export const refreshUserError = err => ({
   type: AUTH_ACTIONS.ACCESS_DENIED,
   payload: { err },
+});
+//
+
+//
+export const signUpRequest = () => ({
+  type: AUTH_ACTIONS.ACCESS_REQUEST,
+});
+
+export const signUpSuccess = user => ({
+  type: AUTH_ACTIONS.ACCESS_GRANTED,
+  payload: { user },
+});
+
+export const signUpError = err => ({
+  type: AUTH_ACTIONS.ACCESS_DENIED,
+  payload: { err },
+});
+//
+
+//
+export const clearAuthErrorMsg = () => ({
+  type: AUTH_ACTIONS.CLEAR_ERROR_MSG,
 });
 //

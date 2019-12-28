@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouteLink } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -20,6 +20,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Copyright from '../../Components/Copyright/Copyright';
 import ValidationHelper from '../../helpers/ValidationHelper';
 import { signUp } from '../../redux/operations/authOperations';
+import { clearAuthErrorMsg } from '../../redux/actions/authActions';
+import {
+  authErrorSelector,
+  authLoadingSelector,
+} from '../../redux/selectors/authSelectors';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -41,7 +46,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Register({ signUp }) {
+function Register({ signUp, errorMsg, clearAuthErrorMsg, loading }) {
+  useEffect(() => {
+    if (errorMsg) {
+      clearAuthErrorMsg();
+    }
+    /* eslint-disable-next-line */
+  }, []);
+
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -94,9 +106,12 @@ function Register({ signUp }) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Sign up
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
+          <Typography component="h1" variant="h5" color="error" align="center">
+            {errorMsg}
+          </Typography>
           <TextField
             variant="outlined"
             margin="normal"
@@ -139,11 +154,12 @@ function Register({ signUp }) {
           <Button
             type="submit"
             fullWidth
+            disabled={loading}
             variant="contained"
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            {loading ? 'Loading...' : 'Sign In'}
           </Button>
           <Grid container>
             <Grid item xs>
@@ -166,15 +182,28 @@ function Register({ signUp }) {
   );
 }
 
+Register.defaultProps = {
+  errorMsg: '',
+};
+
 Register.propTypes = {
   signUp: PropTypes.func.isRequired,
+  errorMsg: PropTypes.string,
+  clearAuthErrorMsg: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
+
+const mSTP = state => ({
+  errorMsg: authErrorSelector(state),
+  loading: authLoadingSelector(state),
+});
 
 const mDTP = {
   signUp,
+  clearAuthErrorMsg,
 };
 
 export default connect(
-  null,
+  mSTP,
   mDTP,
 )(Register);

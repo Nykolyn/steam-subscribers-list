@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouteLink } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -20,6 +20,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Copyright from '../../Components/Copyright/Copyright';
 import ValidationHelper from '../../helpers/ValidationHelper';
 import { signIn } from '../../redux/operations/authOperations';
+import { clearAuthErrorMsg } from '../../redux/actions/authActions';
+import {
+  authErrorSelector,
+  authLoadingSelector,
+} from '../../redux/selectors/authSelectors';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -41,7 +46,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Login({ signIn }) {
+function Login({ signIn, errorMsg, clearAuthErrorMsg, loading }) {
+  useEffect(() => {
+    if (errorMsg) {
+      clearAuthErrorMsg();
+    }
+    /* eslint-disable-next-line */
+  }, []);
+
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -85,7 +97,6 @@ function Login({ signIn }) {
 
     signIn({ password, email, rememberMe });
   };
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -97,6 +108,9 @@ function Login({ signIn }) {
           Sign in
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
+          <Typography component="h1" variant="h5" color="error" align="center">
+            {errorMsg}
+          </Typography>
           <TextField
             variant="outlined"
             margin="normal"
@@ -139,11 +153,12 @@ function Login({ signIn }) {
           <Button
             type="submit"
             fullWidth
+            disabled={loading}
             variant="contained"
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            {loading ? 'Loading...' : 'Sign In'}
           </Button>
           <Grid container>
             <Grid item xs>
@@ -154,7 +169,7 @@ function Login({ signIn }) {
             <Grid item>
               <RouteLink to="/auth/register" className="auth-switch">
                 {/* eslint-disable-next-line */}
-                Don't have an account? Sign Up
+                Don't have an account ? Sign up
               </RouteLink>
             </Grid>
           </Grid>
@@ -167,15 +182,28 @@ function Login({ signIn }) {
   );
 }
 
+Login.defaultProps = {
+  errorMsg: '',
+};
+
 Login.propTypes = {
   signIn: PropTypes.func.isRequired,
+  errorMsg: PropTypes.string,
+  clearAuthErrorMsg: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
+
+const mSTP = state => ({
+  errorMsg: authErrorSelector(state),
+  loading: authLoadingSelector(state),
+});
 
 const mDTP = {
   signIn,
+  clearAuthErrorMsg,
 };
 
 export default connect(
-  null,
+  mSTP,
   mDTP,
 )(Login);

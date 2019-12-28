@@ -13,13 +13,13 @@ import {
 import { getSubsApi, postSubApi, updateFavApi } from '../../services/subsApi';
 import { tokenSelector } from '../selectors/authSelectors';
 
-export const getSubs = () => async (dispatch, getState) => {
+export const getSubs = id => async (dispatch, getState) => {
   const token = tokenSelector(getState());
   if (!token) return;
   setAuthToken(token);
   dispatch(subsRequestStart());
   try {
-    const subs = await getSubsApi();
+    const subs = await getSubsApi(id);
     dispatch(subsRequestSuccess(subs));
   } catch (err) {
     console.error(`error while getting subs: ${err}`);
