@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CircularProgress } from '@material-ui/core';
 
 import SteamForm, {
   toastError,
@@ -79,7 +78,6 @@ class Subscribers extends Component {
   handleSubmit = sub => {
     const { isAuth, addSub, subs, ownerId } = this.props;
     if (!isAuth) return;
-    console.log(ownerId);
     const subAlreadyExists = subs.find(
       el =>
         el.name.toLowerCase().trim() === sub.name.toLocaleLowerCase().trim() ||
@@ -161,12 +159,7 @@ class Subscribers extends Component {
 
     return (
       <div>
-        {subsLoad && (
-          <CircularProgress
-            className="material-subs-loader"
-            color="secondary"
-          />
-        )}
+        {subsLoad && <div className="rainbow-marker-loader" />}
 
         <SteamForm
           handleSubmit={this.handleSubmit}

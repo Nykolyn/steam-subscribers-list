@@ -1,25 +1,37 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { CircularProgress } from '@material-ui/core';
 
 import MouseTrail from './MouseTrail';
 import ProtectedComponent from '../HOC/ProtectedComponent';
 import { refreshUser } from '../redux/operations/authOperations';
-import {
-  authSelector,
-  authLoadingSelector,
-} from '../redux/selectors/authSelectors';
 import { dashboardRoutes } from '../routes';
+import { getFromLS } from '../helpers/localStorage';
 
 const AuthComponent = React.lazy(() => import('../Pages/Auth/Auth'));
 
 const App = ({ refreshUser }) => {
-  useEffect(() => {
-    refreshUser();
+  const [loading, setLoading] = useState(false);
+
+  const handleRefreshUser = async () => {
+    const token = getFromLS('token');
+    if (!token) return;
+
+    setLoading(true);
+    await refreshUser();
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+
+  useEffect(
+    () => {
+      handleRefreshUser();
+    },
     /* eslint-disable-next-line */
-  }, []);
+    [],
+  );
   const renderDashboardRoutes = () => {
     return dashboardRoutes.map(route => (
       <ProtectedComponent
@@ -37,18 +49,15 @@ const App = ({ refreshUser }) => {
       <div id="stars2" />
       <div id="stars3" />
       <MouseTrail />
-      <Suspense
-        fallback={
-          <CircularProgress
-            className="material-subs-loader"
-            color="secondary"
-          />
-        }
-      >
+      <Suspense fallback={<div className="rainbow-marker-loader" />}>
         <Switch>
           {renderDashboardRoutes()}
 
-          <Route path="/auth" component={AuthComponent} />
+          {loading ? (
+            <div className="rainbow-marker-loader" />
+          ) : (
+            <Route path="/auth" component={AuthComponent} />
+          )}
 
           <Redirect to="/auth" />
         </Switch>
@@ -58,21 +67,14 @@ const App = ({ refreshUser }) => {
 };
 
 App.propTypes = {
-  // isAuth: PropTypes.bool.isRequired,
   refreshUser: PropTypes.func.isRequired,
-  // loading: PropTypes.bool.isRequired,
 };
-
-const mSTP = state => ({
-  isAuth: authSelector(state),
-  loading: authLoadingSelector(state),
-});
 
 const mDTP = {
   refreshUser,
 };
 
 export default connect(
-  mSTP,
+  null,
   mDTP,
 )(App);

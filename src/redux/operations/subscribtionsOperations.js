@@ -13,6 +13,7 @@ import {
 import { getSubsApi, postSubApi, updateFavApi } from '../../services/subsApi';
 import { tokenSelector } from '../selectors/authSelectors';
 
+/* eslint-disable */
 export const getSubs = id => async (dispatch, getState) => {
   const token = tokenSelector(getState());
   if (!token) return;
@@ -34,7 +35,6 @@ export const addSub = sub => async (dispatch, getState) => {
   dispatch(addSubRequest());
   try {
     const newSub = await postSubApi(sub);
-    /* eslint-disable-next-line */
     return dispatch(addSubSuccess(newSub));
   } catch (err) {
     console.error(`error while adding sub: ${err}`);
@@ -49,7 +49,7 @@ export const updateFavSub = (id, favorite) => async (dispatch, getState) => {
   dispatch(updateFavSubStart());
   try {
     const sub = await updateFavApi(id, favorite);
-    dispatch(updateFavSubSuccess(sub));
+    return dispatch(updateFavSubSuccess(sub));
   } catch (err) {
     dispatch(updateFavSubError(err));
     console.error(`error while updating favorite sub: ${err}`);

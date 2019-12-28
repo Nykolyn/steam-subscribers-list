@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
-import JellyButton from '../JellyButton';
+import JellyButton from '../Buttons/JellyButton';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { addSubLoadSelector } from '../../redux/selectors/subscribtionSelectors';
@@ -58,7 +58,7 @@ class SteamForm extends Component {
     e.preventDefault();
     const { name, userID } = this.state;
     if (name === '') return this.warn();
-
+    if (userID.includes('/')) return this.warn();
     this.props.handleSubmit(this.state);
     return this.setState({ name: '', userID: '' });
   };
@@ -97,6 +97,7 @@ class SteamForm extends Component {
           type="text"
           autoComplete="off"
           value={query}
+          autoFocus
           placeholder={'filter sub here'}
           name="query"
           onChange={handleFilterSubs}

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { ClipLoader } from 'react-spinners';
+
+moment.defaultFormat = 'DD.MM.YYYY HH:mm';
 
 /* eslint-disable */
 const SteamItem = ({ _id: id, name, date, favorite, handleFavChange }) => {
@@ -13,12 +16,12 @@ const SteamItem = ({ _id: id, name, date, favorite, handleFavChange }) => {
       setLoading(false);
     }, 1000);
   };
-
+  const timeAgo = moment(date, moment.defaultFormat).fromNow();
   return (
     <>
       <div>
         <h2>{name}</h2>
-        <p className="item-date">Added at: {date}</p>
+        <p className="item-date">Added: {`${timeAgo}, ${date}`}</p>
       </div>
       <button
         className="image-wrapper"
