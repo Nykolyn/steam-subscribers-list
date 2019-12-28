@@ -7,20 +7,20 @@ import {
 import { signInApi } from '../../services/subsApi';
 import { tokenSelector } from '../selectors/authSelectors';
 
-export const login = password => async dispatch => {
+export const signIn = user => async dispatch => {
   dispatch(loginRequest());
 
   try {
-    const response = await signInApi(password);
-    dispatch(loginSuccess(response.token));
+    const response = await signInApi(user);
+    dispatch(loginSuccess(response));
   } catch (err) {
     dispatch(loginDenied(err));
   }
 };
 
-export default login;
+export const signUp = user => async dispatch => {};
 
-export const refreshAdmin = () => async (dispatch, getState) => {
+export const refreshUser = () => async (dispatch, getState) => {
   const token = tokenSelector(getState());
   if (!token) return;
   dispatch(refreshAdminStart());

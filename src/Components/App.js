@@ -1,46 +1,70 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import PropTypes from 'prop-types';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { CircularProgress } from '@material-ui/core';
 
 import MouseTrail from './MouseTrail';
-import FormDialog from './FormDialog/FormDialog';
-import Subscribers from '../Pages/Subscribers';
-import { login, refreshAdmin } from '../redux/operations/authOperations';
+import { refreshUser } from '../redux/operations/authOperations';
 import {
   authSelector,
   authLoadingSelector,
 } from '../redux/selectors/authSelectors';
+import { dashboardRoutes } from '../routes';
 
-const App = ({ isAuth, login, refreshAdmin, loading }) => {
+const AuthComponent = React.lazy(() => import('../Pages/Auth/Auth'));
+
+const App = ({ isAuth, refreshUser, loading }) => {
   useEffect(() => {
-    refreshAdmin();
+    refreshUser();
+    /* eslint-disable-next-line */
   }, []);
 
-  const handleAuth = value => {
-    if (value !== process.env.REACT_APP_PASSWORD) return;
-    login({ password: value });
+  const renderDashboardRoutes = () => {
+    return dashboardRoutes.map(route => (
+      <Route
+        key={route.path}
+        path={route.path}
+        component={route.component}
+        exact={route.exact}
+      />
+    ));
   };
+
   return (
     <div className="stars-back">
       <div id="stars" />
       <div id="stars2" />
       <div id="stars3" />
       <MouseTrail />
-      <Subscribers />
-      {loading ? (
-        <CircularProgress className="material-subs-loader" color="secondary" />
-      ) : (
-        !isAuth && <FormDialog submitPassword={handleAuth} />
-      )}
+      <Suspense
+        fallback={
+          <CircularProgress
+            className="material-subs-loader"
+            color="secondary"
+          />
+        }
+      >
+        <Switch>
+          {renderDashboardRoutes()}
+          {loading ? (
+            <CircularProgress
+              className="material-subs-loader"
+              color="secondary"
+            />
+          ) : (
+            !isAuth && <Route path="/auth" component={AuthComponent} />
+          )}
+          <Redirect to="/auth" />
+        </Switch>
+      </Suspense>
     </div>
   );
 };
 
 App.propTypes = {
   isAuth: PropTypes.bool.isRequired,
-  login: PropTypes.func.isRequired,
-  refreshAdmin: PropTypes.func.isRequired,
+  refreshUser: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
@@ -50,8 +74,7 @@ const mSTP = state => ({
 });
 
 const mDTP = {
-  login,
-  refreshAdmin,
+  refreshUser,
 };
 
 export default connect(

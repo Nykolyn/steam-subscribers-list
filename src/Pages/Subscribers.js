@@ -24,7 +24,6 @@ import {
 } from '../redux/selectors/subscribtionSelectors';
 import { START_PAGE, PER_PAGE_SUCBSCRIPTIONS_LIST } from '../helpers/constants';
 import Pagination from '../Components/SteamList/Pagination';
-/* eslint-disable */
 
 const filterSubs = (arr, query = '') =>
   arr.filter(
@@ -51,22 +50,26 @@ class Subscribers extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { isAuth, getSubs } = this.props;
-    const { query, currentPage } = this.state;
+    const { query } = this.state;
 
     if (prevProps.isAuth !== isAuth && isAuth) {
       getSubs();
     }
 
     if (prevState.query !== query) {
-      const minPage = this.renderSubsList().length <= 20;
-      if (currentPage > this.maxPage()) {
-        this.setState({ currentPage: this.maxPage() });
-      }
-      if (currentPage < minPage || currentPage < 1) {
-        this.setState({ currentPage: minPage });
-      }
+      this.handleChangePageOnFilter();
     }
   }
+
+  handleChangePageOnFilter = () => {
+    const { currentPage } = this.state;
+    if (currentPage > this.maxPage()) {
+      this.setState({ currentPage: this.maxPage() });
+    }
+    if (currentPage < 1) {
+      this.setState({ currentPage: 1 });
+    }
+  };
 
   maxPage = () => {
     return Math.ceil(
@@ -84,19 +87,21 @@ class Subscribers extends Component {
         el.userID === sub.userID.trim(),
     );
 
-    if (subAlreadyExists) return toastError();
+    if (subAlreadyExists) {
+      toastError();
+    } else {
+      const subToAdd = {
+        favorite: false,
+        date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+        ...sub,
+      };
 
-    const subToAdd = {
-      favorite: false,
-      date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
-      ...sub,
-    };
+      addSub(subToAdd).then(res => {
+        if (!res) return;
 
-    addSub(subToAdd).then(res => {
-      if (!res) return;
-
-      toastSuccess(subs.length + 1);
-    });
+        toastSuccess(subs.length + 1);
+      });
+    }
   };
 
   handleFilterSubs = e => this.setState({ query: e.target.value });
@@ -199,11 +204,9 @@ Subscribers.propTypes = {
   isAuth: PropTypes.bool.isRequired,
   getSubs: PropTypes.func.isRequired,
   addSub: PropTypes.func.isRequired,
-  subs: PropTypes.array.isRequired,
+  subs: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   updateFavSub: PropTypes.func.isRequired,
   subsLoad: PropTypes.bool.isRequired,
-  addSubLoad: PropTypes.bool.isRequired,
-  updFavSubLoad: PropTypes.bool.isRequired,
 };
 
 const mapSTP = state => ({
