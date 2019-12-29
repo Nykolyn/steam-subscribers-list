@@ -49,7 +49,7 @@ export const updateFavSub = (id, favorite) => async (dispatch, getState) => {
   dispatch(updateFavSubStart());
   try {
     const sub = await updateFavApi(id, favorite);
-    return dispatch(updateFavSubSuccess(sub));
+    return await dispatch(updateFavSubSuccess(sub));
   } catch (err) {
     dispatch(updateFavSubError(err));
     console.error(`error while updating favorite sub: ${err}`);

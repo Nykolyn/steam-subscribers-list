@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import { ClipLoader } from 'react-spinners';
 
+import { updateFavSub } from '../../redux/operations/subscribtionsOperations';
+
 moment.defaultFormat = 'DD.MM.YYYY HH:mm';
 
-/* eslint-disable */
-const SteamItem = ({ _id: id, name, date, favorite, handleFavChange }) => {
+const SteamItem = ({ _id: id, name, date, favorite, updateFavSub }) => {
   const [loading, setLoading] = useState(false);
 
-  const handleLoading = async () => {
+  const handleUpdateFavSub = async () => {
     setLoading(true);
-    await handleFavChange(id, favorite);
+
+    await updateFavSub(id, { favorite: !favorite });
+
     setTimeout(async () => {
       setLoading(false);
     }, 1000);
   };
+
   const timeAgo = moment(date, moment.defaultFormat).fromNow();
   return (
     <>
@@ -26,9 +31,7 @@ const SteamItem = ({ _id: id, name, date, favorite, handleFavChange }) => {
       <button
         className="image-wrapper"
         type="button"
-        onClick={() => {
-          handleLoading();
-        }}
+        onClick={() => handleUpdateFavSub()}
       >
         {loading ? (
           <ClipLoader color="#fff" loading={loading} />
@@ -54,9 +57,17 @@ SteamItem.defaultProps = {
 
 SteamItem.propTypes = {
   name: PropTypes.string.isRequired,
+  _id: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   favorite: PropTypes.bool,
-  handleFavChange: PropTypes.func.isRequired,
+  updateFavSub: PropTypes.func.isRequired,
 };
 
-export default SteamItem;
+const mDTP = {
+  updateFavSub,
+};
+
+export default connect(
+  null,
+  mDTP,
+)(SteamItem);

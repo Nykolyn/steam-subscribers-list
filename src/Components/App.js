@@ -54,7 +54,9 @@ const App = ({ refreshUser }) => {
           {renderDashboardRoutes()}
 
           {loading ? (
-            <div className="rainbow-marker-loader" />
+            <>
+              <div className="rainbow-marker-loader" />
+            </>
           ) : (
             <Route path="/auth" component={AuthComponent} />
           )}

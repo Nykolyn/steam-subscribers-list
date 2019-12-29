@@ -9,17 +9,12 @@ import SteamForm, {
   toastSuccess,
 } from '../Components/SteamList/SteamForm';
 import SteamList from '../Components/SteamList/SteamList';
-import {
-  getSubs,
-  addSub,
-  updateFavSub,
-} from '../redux/operations/subscribtionsOperations';
+import { getSubs, addSub } from '../redux/operations/subscribtionsOperations';
 import { authSelector, idSelector } from '../redux/selectors/authSelectors';
 import {
   subsSelector,
   subsLoadSelector,
   addSubLoadSelector,
-  updateFavSubLoadSelector,
 } from '../redux/selectors/subscribtionSelectors';
 import { START_PAGE, PER_PAGE_SUCBSCRIPTIONS_LIST } from '../helpers/constants';
 import Pagination from '../Components/SteamList/Pagination';
@@ -112,11 +107,6 @@ class Subscribers extends Component {
       onChangeText: state.showFavorites ? 'Show favourites' : 'Show all',
     }));
 
-  handleFavoriteChange = (id, favorite) => {
-    const { updateFavSub } = this.props;
-    updateFavSub(id, { favorite: !favorite });
-  };
-
   filteredSubs = (subs, query) => filterSubs(subs, query);
 
   showTotalAmmountOfSubs = () => {
@@ -174,10 +164,7 @@ class Subscribers extends Component {
             Total length: {this.showTotalAmmountOfSubs()}
           </p>
         </div>
-        <SteamList
-          subscribers={this.renderPaginationList()}
-          handleFavChange={this.handleFavoriteChange}
-        />
+        <SteamList subscribers={this.renderPaginationList()} />
 
         {this.renderSubsList().length > 20 && (
           <Pagination
@@ -198,7 +185,6 @@ Subscribers.propTypes = {
   getSubs: PropTypes.func.isRequired,
   addSub: PropTypes.func.isRequired,
   subs: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  updateFavSub: PropTypes.func.isRequired,
   subsLoad: PropTypes.bool.isRequired,
   ownerId: PropTypes.string.isRequired,
 };
@@ -208,14 +194,12 @@ const mapSTP = state => ({
   subs: subsSelector(state),
   subsLoad: subsLoadSelector(state),
   addSubLoad: addSubLoadSelector(state),
-  updFavSubLoad: updateFavSubLoadSelector(state),
   ownerId: idSelector(state),
 });
 
 const mDTP = {
   getSubs,
   addSub,
-  updateFavSub,
 };
 
 export default connect(

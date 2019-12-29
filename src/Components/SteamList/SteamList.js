@@ -4,13 +4,13 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import SteamItem from './SteamItem';
 /* eslint-disable */
 
-const SteamList = ({ subscribers, handleFavChange }) => (
+const SteamList = ({ subscribers }) => (
   <ul className="subs-list container">
     <TransitionGroup className="subs-list container">
       {subscribers.map(sub => (
         <CSSTransition key={sub._id} timeout={500} classNames="bounce">
           <li className="subs-list__item">
-            <SteamItem {...sub} handleFavChange={handleFavChange} />
+            <SteamItem {...sub} />
           </li>
         </CSSTransition>
       ))}
@@ -20,7 +20,6 @@ const SteamList = ({ subscribers, handleFavChange }) => (
 
 SteamList.propTypes = {
   subscribers: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  handleFavChange: PropTypes.func.isRequired,
 };
 
 export default SteamList;
