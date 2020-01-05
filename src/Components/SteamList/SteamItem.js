@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import { ClipLoader } from 'react-spinners';
 
 import { updateFavSub } from '../../redux/operations/subscribtionsOperations';
-
-moment.defaultFormat = 'DD.MM.YYYY HH:mm';
+import { timeAgo } from '../../helpers/dateDiff';
 
 const SteamItem = ({ _id: id, name, date, favorite, updateFavSub }) => {
   const [loading, setLoading] = useState(false);
@@ -21,12 +19,11 @@ const SteamItem = ({ _id: id, name, date, favorite, updateFavSub }) => {
     }, 1000);
   };
 
-  const timeAgo = moment(date, moment.defaultFormat).fromNow();
   return (
     <>
       <div>
         <h2>{name}</h2>
-        <p className="item-date">Added: {`${timeAgo}, ${date}`}</p>
+        <p className="item-date">Added: {`${timeAgo(date)}, ${date}`}</p>
       </div>
       <button
         className="image-wrapper"

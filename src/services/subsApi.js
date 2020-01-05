@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const URL = process.env.REACT_APP_URL;
-const URL = 'http://localhost:5678';
+const URL = process.env.REACT_APP_URL;
+// const URL = 'http://localhost:5678';
 
 export const getSubsApi = id =>
   axios.get(`${URL}/subscribers/${id}`).then(response => response.data.subs);

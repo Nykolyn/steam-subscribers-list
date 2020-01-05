@@ -33,6 +33,7 @@ export const addSub = sub => async (dispatch, getState) => {
   if (!token) return;
   setAuthToken(token);
   dispatch(addSubRequest());
+
   try {
     const newSub = await postSubApi(sub);
     return dispatch(addSubSuccess(newSub));

@@ -21,7 +21,7 @@ export const toastError = () =>
 export const toastSuccess = length =>
   toast.success(`🤟 Sub added! Total ammout:  ${length}`, {
     position: 'top-right',
-    autoClose: 4000,
+    autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,

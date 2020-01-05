@@ -18,6 +18,7 @@ import {
 } from '../redux/selectors/subscribtionSelectors';
 import { START_PAGE, PER_PAGE_SUCBSCRIPTIONS_LIST } from '../helpers/constants';
 import Pagination from '../Components/SteamList/Pagination';
+import SubsInfo from '../Components/SteamList/SubsInfo';
 
 const filterSubs = (arr, query = '') =>
   arr.filter(
@@ -42,11 +43,11 @@ class Subscribers extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { isAuth, getSubs, ownerId } = this.props;
     const { query } = this.state;
+    const { subs } = this.props;
 
-    if (prevProps.isAuth !== isAuth && isAuth) {
-      getSubs(ownerId);
+    if (prevProps.subs !== subs && query) {
+      console.log('works');
     }
 
     if (prevState.query !== query) {
@@ -146,7 +147,6 @@ class Subscribers extends Component {
   render() {
     const { query, onChangeText, currentPage } = this.state;
     const { subsLoad } = this.props;
-
     return (
       <div>
         {subsLoad && <div className="rainbow-marker-loader" />}
@@ -159,11 +159,7 @@ class Subscribers extends Component {
           onChangeText={onChangeText}
         />
 
-        <div className="subs-length-wrap">
-          <p className="subs-length-text">
-            Total length: {this.showTotalAmmountOfSubs()}
-          </p>
-        </div>
+        <SubsInfo showTotalAmmountOfSubs={this.showTotalAmmountOfSubs()} />
         <SteamList subscribers={this.renderPaginationList()} />
 
         {this.renderSubsList().length > 20 && (

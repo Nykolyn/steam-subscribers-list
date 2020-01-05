@@ -8,19 +8,18 @@
   position: relative;
   z-index: 3;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  width: 900px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 
   &__input {
     border: none;
     font-family: 'Cormorant Garamond', serif;
     font-weight: 700;
     font-style: italic;
-    margin-right: 10px;
-    margin-left: 10px;
+    margin: 0 2em;
     width: 200px;
     padding: 10px;
     font-size: 18px;
@@ -41,11 +40,12 @@
 }
 
 .subs-length-wrap {
-  position: fixed;
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
   z-index: 3;
-  top: 14%;
-  left: 12%;
-  // width: 150px;
+  margin-bottom: 1em;
 
   .subs-length-text {
     font-size: 25px;
@@ -59,11 +59,12 @@
   display: flex;
   font-family: 'Cormorant Garamond', serif;
   font-weight: 400;
-  height: 620px;
-  overflow: hidden;
-  padding: 30px;
+  height: calc(100vh - 250px);
+  overflow-y: auto;
+  padding: 1em 2em;
+  margin-bottom: 3em;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   position: relative;
   transition: all 0.5s;
@@ -77,9 +78,7 @@
     border-radius: 20px;
     color: rgb(209, 208, 208);
     transform: rotateX(50deg);
-    padding: 20px;
-    margin-bottom: 20px;
-    margin-right: 20px;
+    padding: 1em;
     position: relative;
     transition: all 0.5s;
 

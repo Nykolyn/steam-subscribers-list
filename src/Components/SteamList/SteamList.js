@@ -1,25 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import SteamItem from './SteamItem';
-/* eslint-disable */
+import { addSubLoadSelector } from '../../redux/selectors/subscribtionSelectors';
 
-const SteamList = ({ subscribers }) => (
-  <ul className="subs-list container">
-    <TransitionGroup className="subs-list container">
+const SteamList = ({ subscribers, addSubLoading }) => {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (addSubLoading) {
+      setLoading(true);
+    } else
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
+  }, [addSubLoading]);
+
+  return (
+    <ul className="subs-list container">
+      {loading && (
+        <li className="subs-list__item">
+          <div className="rainbow-marker-loader" />
+        </li>
+      )}
       {subscribers.map(sub => (
-        <CSSTransition key={sub._id} timeout={500} classNames="bounce">
-          <li className="subs-list__item">
-            <SteamItem {...sub} />
-          </li>
-        </CSSTransition>
+        <li key={sub.userID} className="subs-list__item">
+          <SteamItem {...sub} />
+        </li>
       ))}
-    </TransitionGroup>
-  </ul>
-);
+    </ul>
+  );
+};
 
 SteamList.propTypes = {
   subscribers: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  addSubLoading: PropTypes.bool.isRequired,
 };
 
-export default SteamList;
+const mSTP = state => ({
+  addSubLoading: addSubLoadSelector(state),
+});
+
+export default connect(mSTP)(SteamList);

@@ -1,11 +1,24 @@
 import { combineReducers } from 'redux';
 
 import { SUBS_ACTIONS } from '../actions/subscribtionActions';
+import {
+  isSameDay,
+  isSameMonth,
+  isSameWeek,
+  isSameYear,
+} from '../../helpers/dateDiff';
 
 const loadingState = {
   getSubs: false,
   addSub: false,
   updateFavSub: false,
+};
+
+const dateState = {
+  sameDayAdded: 0,
+  sameWeekAdded: 0,
+  sameMonthAdded: 0,
+  lastYearAdded: 0,
 };
 
 const subs = (state = [], { type, payload }) => {
@@ -56,4 +69,49 @@ const loading = (state = loadingState, { type }) => {
   }
 };
 
-export default combineReducers({ subs, loading });
+const date = (state = dateState, { type, payload }) => {
+  switch (type) {
+    case SUBS_ACTIONS.SUBS_REQUEST_SUCCESS: {
+      const date = new Date().toLocaleDateString();
+      let sameDay = 0;
+      let sameMonth = 0;
+      let sameWeek = 0;
+      let lastYear = 0;
+
+      payload.subs.forEach(sub => {
+        const subDate = sub.date.split(' ')[0];
+
+        if (isSameDay(date, subDate)) {
+          sameDay += 1;
+        }
+        if (isSameMonth(date, subDate)) {
+          sameMonth += 1;
+        }
+        if (isSameWeek(date, subDate)) {
+          sameWeek += 1;
+        }
+        if (!isSameYear(date, subDate)) {
+          lastYear += 1;
+        }
+      });
+
+      return {
+        sameDayAdded: sameDay,
+        sameWeekAdded: sameWeek,
+        sameMonthAdded: sameMonth,
+        lastYearAdded: lastYear,
+      };
+    }
+    case SUBS_ACTIONS.ADD_SUB_SUCCESS:
+      return {
+        sameDayAdded: state.sameDayAdded + 1,
+        sameWeekAdded: state.sameWeekAdded + 1,
+        sameMonthAdded: state.sameMonthAdded + 1,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({ loading, subs, date });
