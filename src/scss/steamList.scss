@@ -37,6 +37,23 @@
       color: rgba(143, 140, 140, 0.582);
     }
   }
+
+  &__filter-wrapper {
+    position: relative;
+  }
+
+  &__clear-button-wrapper {
+    position: absolute;
+    top: 50%;
+    color: #fff;
+    transition: all .4s;
+    // right: 20%;
+    transform: translateY(-50%);
+  }
+
+  &__clear-icon {
+    color: #fff;
+  }
 }
 
 .subs-length-wrap {

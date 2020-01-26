@@ -55,6 +55,8 @@ class Subscribers extends Component {
     }
   }
 
+  resetFilter = () => this.setState({ query: '' });
+
   handleChangePageOnFilter = () => {
     const { currentPage } = this.state;
     if (currentPage > this.maxPage()) {
@@ -157,6 +159,7 @@ class Subscribers extends Component {
           handleFilterSubs={this.handleFilterSubs}
           showFavorites={this.showFavorites}
           onChangeText={onChangeText}
+          onReset={this.resetFilter}
         />
 
         <SubsInfo showTotalAmmountOfSubs={this.showTotalAmmountOfSubs()} />

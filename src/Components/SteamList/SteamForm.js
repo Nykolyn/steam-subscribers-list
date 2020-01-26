@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import JellyButton from '../Buttons/JellyButton';
+import ClearIcon from '@material-ui/icons/Clear';
+import IconButton from '@material-ui/core/IconButton';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { addSubLoadSelector } from '../../redux/selectors/subscribtionSelectors';
@@ -71,6 +73,7 @@ class SteamForm extends Component {
       showFavorites,
       onChangeText,
       loading,
+      onReset,
     } = this.props;
     return (
       <form onSubmit={this.handleFormSubmit} className="sub-form">
@@ -93,16 +96,28 @@ class SteamForm extends Component {
           placeholder="User id (optional)"
         />
         <JellyButton text="Add new sub" loading={loading} type="submit" />
-        <input
-          type="text"
-          autoComplete="off"
-          value={query}
-          autoFocus
-          placeholder={'filter sub here'}
-          name="query"
-          onChange={handleFilterSubs}
-          className="sub-form__input"
-        />
+        <div className="sub-form__filter-wrapper">
+          {query && (
+            <div className="sub-form__clear-button-wrapper">
+              <IconButton
+                onClick={() => onReset()}
+                className="sub-form__clear-button"
+              >
+                <ClearIcon className="sub-form__clear-icon" />
+              </IconButton>
+            </div>
+          )}
+          <input
+            type="text"
+            autoComplete="off"
+            value={query}
+            autoFocus
+            placeholder={'filter sub here'}
+            name="query"
+            onChange={handleFilterSubs}
+            className="sub-form__input"
+          />
+        </div>
         <JellyButton
           text={onChangeText}
           type="button"
