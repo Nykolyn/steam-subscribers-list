@@ -43,8 +43,8 @@ class SteamForm extends Component {
     userID: '',
   };
 
-  warn = () =>
-    toast.warn('😤😤😤 Fill the field!!!', {
+  warn = (text) =>
+    toast.warn(`😤😤😤 ${ text ? text : "Fill the field!!!" } `, {
       position: 'top-left',
       autoClose: 2000,
       hideProgressBar: false,
@@ -59,8 +59,8 @@ class SteamForm extends Component {
   handleFormSubmit = e => {
     e.preventDefault();
     const { name, userID } = this.state;
-    if (name === '') return this.warn();
-    if (userID.includes('/')) return this.warn();
+    if (name.trim() === '' || userID.trim() === '') return this.warn();
+    if (userID.includes('/')) return this.warn('Forgot to remove "/" ');
     this.props.handleSubmit(this.state);
     return this.setState({ name: '', userID: '' });
   };
@@ -93,7 +93,7 @@ class SteamForm extends Component {
           name="userID"
           onChange={this.handleInputChange}
           className="sub-form__input"
-          placeholder="User id (optional)"
+          placeholder="User id"
         />
         <JellyButton text="Add new sub" loading={loading} type="submit" />
         <div className="sub-form__filter-wrapper">

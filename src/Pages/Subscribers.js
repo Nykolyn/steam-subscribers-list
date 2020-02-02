@@ -93,9 +93,9 @@ class Subscribers extends Component {
       };
 
       addSub(subToAdd).then(res => {
-        if (!res) return;
+        if (!res) return toastError();
 
-        toastSuccess(subs.length + 1);
+        return toastSuccess(subs.length + 1);
       });
     }
   };
