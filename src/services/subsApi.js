@@ -9,7 +9,7 @@ export const getSubsApi = id =>
 export const postSubApi = sub =>
   axios
     .post(`${URL}/subscribers`, sub)
-    .then(response => response.data.addedSub);
+    .then(response => response.data.newSub);
 
 export const updateFavApi = (id, sub) =>
   axios
