@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 
 import { SUBS_ACTIONS } from '../actions/subscribtionActions';
+import { AUTH_ACTIONS } from '../actions/authActions';
 import {
   isSameDay,
   isSameMonth,
@@ -25,6 +26,9 @@ const subs = (state = [], { type, payload }) => {
   switch (type) {
     case SUBS_ACTIONS.SUBS_REQUEST_SUCCESS:
       return payload.subs;
+
+    case AUTH_ACTIONS.LOG_OUT:
+      return [];
 
     case SUBS_ACTIONS.ADD_SUB_SUCCESS:
       return [...state, payload.sub];
@@ -108,6 +112,9 @@ const date = (state = dateState, { type, payload }) => {
         sameWeekAdded: state.sameWeekAdded + 1,
         sameMonthAdded: state.sameMonthAdded + 1,
       };
+
+    case AUTH_ACTIONS.LOG_OUT:
+      return dateState;
 
     default:
       return state;

@@ -1,8 +1,18 @@
+// @import 'bootstrap/dist/css/bootstrap.css';
+@import '~antd/dist/antd.css';
+// steam-page
 @import './steamList.scss';
+@import './steam-table.scss';
+
+// auth-page
 @import './auth.scss';
+
+// buttons
+@import './buttons/jelly-button.scss';
+
+// animations, loaders
 @import './mouse-trail.scss';
 @import './loaders/react-loader.scss';
-@import './buttons/jelly-button.scss';
 @import './animated-gradient.scss';
 @import './super-slide.scss';
 @import './blazing.scss';
@@ -11,6 +21,7 @@
 @import './transitions/bounceInLeft.scss';
 @import './pagination.scss';
 @import './loaders/rainbow-pen-loader.scss';
+@import './fire-text.scss';
 
 * {
   box-sizing: border-box;
@@ -47,7 +58,7 @@ p {
 }
 
 .container {
-  max-width: 1600px;
+  width: 80%;
   margin: 0 auto;
 }
 

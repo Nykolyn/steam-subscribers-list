@@ -20,32 +20,60 @@ const SteamItem = ({ _id: id, name, date, favorite, updateFavSub }) => {
   };
 
   return (
-    <>
-      <div>
-        <h2>{name}</h2>
-        <p className="item-date">Added: {`${timeAgo(date)}, ${date}`}</p>
-      </div>
-      <button
-        className="image-wrapper"
-        type="button"
-        onClick={() => handleUpdateFavSub()}
-      >
-        {loading ? (
-          <ClipLoader color="#fff" loading={loading} />
-        ) : (
-          <img
-            className="item-image"
-            src={
-              favorite
-                ? 'https://image.flaticon.com/icons/svg/148/148838.svg'
-                : 'https://image.flaticon.com/icons/svg/149/149219.svg'
-            }
-            alt="fav"
-          />
-        )}
-      </button>
-    </>
+    <tr className="subs-row">
+      <td className="subs-row__item">{name}</td>
+      <td className="subs-row__item">Added: {`${timeAgo(date)}, ${date}`}</td>
+      <td className="subs-row__item">
+        <button
+          type="button"
+          className="image-wrapper"
+          onClick={() => handleUpdateFavSub()}
+        >
+          {loading ? (
+            <ClipLoader color="#fff" loading={loading} />
+          ) : (
+            <img
+              className="item-image"
+              src={
+                favorite
+                  ? 'https://image.flaticon.com/icons/svg/148/148838.svg'
+                  : 'https://image.flaticon.com/icons/svg/149/149219.svg'
+              }
+              alt="fav"
+            />
+          )}
+        </button>
+      </td>
+    </tr>
   );
+
+  // return (
+  //   <>
+  //     <div>
+  //       <h2>{name}</h2>
+  //       <p className="item-date">Added: {`${timeAgo(date)}, ${date}`}</p>
+  //     </div>
+  //     <button
+  //       className="image-wrapper"
+  //       type="button"
+  //       onClick={() => handleUpdateFavSub()}
+  //     >
+  //       {loading ? (
+  //         <ClipLoader color="#fff" loading={loading} />
+  //       ) : (
+  //         <img
+  //           className="item-image"
+  //           src={
+  //             favorite
+  //               ? 'https://image.flaticon.com/icons/svg/148/148838.svg'
+  //               : 'https://image.flaticon.com/icons/svg/149/149219.svg'
+  //           }
+  //           alt="fav"
+  //         />
+  //       )}
+  //     </button>
+  //   </>
+  // );
 };
 
 SteamItem.defaultProps = {

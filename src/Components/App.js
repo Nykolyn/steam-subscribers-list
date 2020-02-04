@@ -2,12 +2,13 @@ import React, { Suspense, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 
-import MouseTrail from './MouseTrail';
 import ProtectedComponent from '../HOC/ProtectedComponent';
 import { refreshUser } from '../redux/operations/authOperations';
 import { dashboardRoutes } from '../routes';
 import { getFromLS } from '../helpers/localStorage';
+import Navigation from './Navigation/Navigation';
 
 const AuthComponent = React.lazy(() => import('../Pages/Auth/Auth'));
 
@@ -44,11 +45,8 @@ const App = ({ refreshUser }) => {
   };
 
   return (
-    <div className="stars-back">
-      <div id="stars" />
-      <div id="stars2" />
-      <div id="stars3" />
-      <MouseTrail />
+    <Content>
+      <Navigation />
       <Suspense fallback={<div className="rainbow-marker-loader" />}>
         <Switch>
           {renderDashboardRoutes()}
@@ -64,9 +62,15 @@ const App = ({ refreshUser }) => {
           <Redirect to="/auth" />
         </Switch>
       </Suspense>
-    </div>
+    </Content>
   );
 };
+
+const Content = styled.div`
+  min-height: 100vh;
+  position: relative;
+  z-index: 3;
+`;
 
 App.propTypes = {
   refreshUser: PropTypes.func.isRequired,

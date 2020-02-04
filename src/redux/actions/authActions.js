@@ -1,9 +1,14 @@
 export const AUTH_ACTIONS = {
-  ACCESS_REQUEST: 'ACCESS_REQUEST',
-  ACCESS_GRANTED: 'ACCESS_GRANTED',
-  ACCESS_DENIED: 'ACCESS_DENIED',
-  CLEAR_ERROR_MSG: 'CREAR_ERROR_MSG',
+  ACCESS_REQUEST: 'auth/ACCESS_REQUEST',
+  ACCESS_GRANTED: 'auth/ACCESS_GRANTED',
+  ACCESS_DENIED: 'auth/ACCESS_DENIED',
+  CLEAR_ERROR_MSG: 'auth/CREAR_ERROR_MSG',
+  LOG_OUT: 'auth/LOG_OUT',
 };
+
+export const logOut = () => ({
+  type: AUTH_ACTIONS.LOG_OUT,
+});
 
 //
 export const loginRequest = () => ({

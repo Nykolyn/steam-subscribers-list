@@ -12,10 +12,14 @@ import {
   Box,
   Typography,
   Container,
+  InputAdornment,
+  IconButton,
 } from '@material-ui/core';
 import { Link as RouteLink } from 'react-router-dom';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import ValidationHelper from '../../helpers/ValidationHelper';
 import Copyright from '../Copyright/Copyright';
@@ -58,13 +62,17 @@ const AuthForm = ({
     if (errorMsg) {
       clearAuthErrorMsg();
     }
-    /* eslint-disable-next-line */
-  }, []);
+  }, [clearAuthErrorMsg]);
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleInputChange = ({ target: { name, value, checked } }) => {
     switch (name) {
@@ -141,10 +149,19 @@ const AuthForm = ({
             fullWidth
             name="password"
             label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={handleInputChange}
             autoComplete="current-password"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => handleClickShowPassword()}>
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <FormControlLabel
             control={

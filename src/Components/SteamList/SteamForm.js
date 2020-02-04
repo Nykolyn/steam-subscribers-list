@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import JellyButton from '../Buttons/JellyButton';
@@ -43,8 +44,8 @@ class SteamForm extends Component {
     userID: '',
   };
 
-  warn = (text) =>
-    toast.warn(`😤😤😤 ${ text ? text : "Fill the field!!!" } `, {
+  warn = text =>
+    toast.warn(`😤😤😤 ${text ? text : 'Fill the field!!!'} `, {
       position: 'top-left',
       autoClose: 2000,
       hideProgressBar: false,
@@ -95,34 +96,25 @@ class SteamForm extends Component {
           className="sub-form__input"
           placeholder="User id"
         />
-        <JellyButton text="Add new sub" loading={loading} type="submit" />
-        <div className="sub-form__filter-wrapper">
-          {query && (
-            <div className="sub-form__clear-button-wrapper">
-              <IconButton
-                onClick={() => onReset()}
-                className="sub-form__clear-button"
-              >
-                <ClearIcon className="sub-form__clear-icon" />
-              </IconButton>
-            </div>
-          )}
           <input
             type="text"
             autoComplete="off"
             value={query}
+            onBlur={() => onReset()}
             autoFocus
             placeholder={'filter sub here'}
             name="query"
             onChange={handleFilterSubs}
             className="sub-form__input"
           />
-        </div>
-        <JellyButton
-          text={onChangeText}
-          type="button"
-          onClick={() => showFavorites()}
-        />
+        <ButtonWrapper>
+          <JellyButton text="Add new sub" loading={loading} type="submit" />
+          <JellyButton
+            text={onChangeText}
+            type="button"
+            onClick={() => showFavorites()}
+          />
+        </ButtonWrapper>
         <ToastContainer
           position="top-right"
           autoClose={4000}
@@ -138,6 +130,13 @@ class SteamForm extends Component {
     );
   }
 }
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+`;
+
 SteamForm.propTypes = {
   loading: PropTypes.bool.isRequired,
 };

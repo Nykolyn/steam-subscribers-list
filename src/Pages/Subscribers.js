@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
+import styled from 'styled-components';
 import 'react-toastify/dist/ReactToastify.css';
 
 import SteamForm, {
@@ -17,7 +18,7 @@ import {
   addSubLoadSelector,
 } from '../redux/selectors/subscribtionSelectors';
 import { START_PAGE, PER_PAGE_SUCBSCRIPTIONS_LIST } from '../helpers/constants';
-import Pagination from '../Components/SteamList/Pagination';
+// import Pagination from '../Components/SteamList/Pagination';
 import SubsInfo from '../Components/SteamList/SubsInfo';
 
 const filterSubs = (arr, query = '') =>
@@ -150,34 +151,55 @@ class Subscribers extends Component {
     const { query, onChangeText, currentPage } = this.state;
     const { subsLoad } = this.props;
     return (
-      <div>
+      <Content>
         {subsLoad && <div className="rainbow-marker-loader" />}
 
-        <SteamForm
-          handleSubmit={this.handleSubmit}
-          query={query}
-          handleFilterSubs={this.handleFilterSubs}
-          showFavorites={this.showFavorites}
-          onChangeText={onChangeText}
-          onReset={this.resetFilter}
-        />
-
-        <SubsInfo showTotalAmmountOfSubs={this.showTotalAmmountOfSubs()} />
-        <SteamList subscribers={this.renderPaginationList()} />
-
-        {this.renderSubsList().length > 20 && (
-          <Pagination
-            currentPage={currentPage}
-            maxPage={this.maxPage}
-            handleChangePage={this.handleChangePage}
+        <Form>
+          <SteamForm
+            handleSubmit={this.handleSubmit}
+            query={query}
+            handleFilterSubs={this.handleFilterSubs}
+            showFavorites={this.showFavorites}
+            onChangeText={onChangeText}
+            onReset={this.resetFilter}
           />
-        )}
 
-        <ToastContainer />
-      </div>
+          <SubsInfo showTotalAmmountOfSubs={this.showTotalAmmountOfSubs()} />
+        </Form>
+        <List>
+          <SteamList subscribers={this.renderPaginationList()} />
+
+          {/* {this.renderSubsList().length > 20 && (
+            <Pagination
+              currentPage={currentPage}
+              maxPage={this.maxPage}
+              handleChangePage={this.handleChangePage}
+            />
+          )} */}
+          <ToastContainer />
+        </List>
+      </Content>
     );
   }
 }
+
+const Content = styled.div`
+  display: flex;
+  width: 90%;
+  margin: 0 auto;
+  justify-content: space-between;
+`;
+
+const Form = styled.div`
+  width: 20%;
+  /* margin: 0 auto; */
+  display: flex;
+  flex-direction: column;
+`;
+
+const List = styled.div`
+  width: 60%;
+`;
 
 Subscribers.propTypes = {
   isAuth: PropTypes.bool.isRequired,
