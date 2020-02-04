@@ -20,6 +20,11 @@ const SteamList = ({ subscribers, addSubLoading }) => {
   return (
     subscribers.length > 0 && (
       <div>
+        {loading && (
+          <LoaderWrapper>
+            <CircularProgress />
+          </LoaderWrapper>
+        )}
         <StyledTable>
           <tbody>
             <tr className="subs-head">
@@ -43,6 +48,13 @@ const SteamList = ({ subscribers, addSubLoading }) => {
   );
 };
 
+const LoaderWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
 const StyledTable = styled.table`
   width: 100%;
   font-size: 20px;
@@ -53,7 +65,7 @@ const StyledTable = styled.table`
 
 const TableContent = styled.div`
   width: 100%;
-  max-height: calc(100vh - 200px);
+  height: calc(100vh - 200px);
   overflow-y: auto;
   overflow-x: hidden;
   margin-bottom: 10px;

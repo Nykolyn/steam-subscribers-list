@@ -206,6 +206,7 @@ const Form = styled.div`
 `;
 
 const List = styled.div`
+  position: relative;
   width: 60%;
 `;
 

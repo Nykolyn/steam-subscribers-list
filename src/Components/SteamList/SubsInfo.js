@@ -31,7 +31,7 @@ function SubsInfo({
         <span className="subs-length-text__num">{lastYearAdded}</span>
       </p>
       <p className="subs-length-text">
-        Total added:
+        Total:
         <span className="subs-length-text__num">{showTotalAmmountOfSubs}</span>
       </p>
     </Content>
