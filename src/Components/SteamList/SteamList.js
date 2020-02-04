@@ -18,24 +18,28 @@ const SteamList = ({ subscribers, addSubLoading }) => {
   }, [addSubLoading]);
 
   return (
-    <div>
-      <StyledTable>
-        <thead className="subs-head">
-          <th className="subs-head__item">Name</th>
-          <th className="subs-head__item">Date Added</th>
-          <th className="subs-head__item">Favorite</th>
-        </thead>
-      </StyledTable>
-      <TableContent>
+    subscribers.length > 0 && (
+      <div>
         <StyledTable>
-          <tbody className="subs-body">
-            {subscribers.map(sub => (
-              <SteamItem key={sub.userID} {...sub} />
-            ))}
+          <tbody>
+            <tr className="subs-head">
+              <th className="subs-head__item">Name</th>
+              <th className="subs-head__item">Date Added</th>
+              <th className="subs-head__item">Favorite</th>
+            </tr>
           </tbody>
         </StyledTable>
-      </TableContent>
-    </div>
+        <TableContent>
+          <StyledTable>
+            <tbody className="subs-body">
+              {subscribers.map(sub => (
+                <SteamItem key={sub.userID} {...sub} />
+              ))}
+            </tbody>
+          </StyledTable>
+        </TableContent>
+      </div>
+    )
   );
 };
 
@@ -52,6 +56,7 @@ const TableContent = styled.div`
   max-height: calc(100vh - 200px);
   overflow-y: auto;
   overflow-x: hidden;
+  margin-bottom: 10px;
 
   /* width */
   ::-webkit-scrollbar {

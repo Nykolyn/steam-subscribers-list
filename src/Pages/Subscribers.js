@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
+import { Pagination } from 'antd';
 import 'react-toastify/dist/ReactToastify.css';
 
 import SteamForm, {
@@ -132,10 +133,9 @@ class Subscribers extends Component {
   };
 
   handleChangePage = name => {
-    this.setState(state => ({
-      currentPage:
-        name === 'next' ? state.currentPage + 1 : state.currentPage - 1,
-    }));
+    this.setState({
+      currentPage: name,
+    });
   };
 
   renderPaginationList = () => {
@@ -148,7 +148,7 @@ class Subscribers extends Component {
   };
 
   render() {
-    const { query, onChangeText, currentPage } = this.state;
+    const { query, onChangeText, perPage } = this.state;
     const { subsLoad } = this.props;
     return (
       <Content>
@@ -169,19 +169,27 @@ class Subscribers extends Component {
         <List>
           <SteamList subscribers={this.renderPaginationList()} />
 
-          {/* {this.renderSubsList().length > 20 && (
-            <Pagination
-              currentPage={currentPage}
-              maxPage={this.maxPage}
-              handleChangePage={this.handleChangePage}
-            />
-          )} */}
+          {this.renderSubsList().length > 0 && (
+            <PaginationBlock>
+              <Pagination
+                showQuickJumper
+                defaultCurrent={1}
+                defaultPageSize={perPage}
+                total={this.renderSubsList().length}
+                onChange={this.handleChangePage}
+              />
+            </PaginationBlock>
+          )}
           <ToastContainer />
         </List>
       </Content>
     );
   }
 }
+
+const PaginationBlock = styled.div`
+  text-align: center;
+`;
 
 const Content = styled.div`
   display: flex;
