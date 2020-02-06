@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/steam-subscribers-list/precache-manifest.41a73328949edb7a9bdd45766cdd7059.js"
+  "/steam-subscribers-list/precache-manifest.6caed6c2d7a67f626da21218ce2f5026.js"
 );
 
 self.addEventListener('message', (event) => {
