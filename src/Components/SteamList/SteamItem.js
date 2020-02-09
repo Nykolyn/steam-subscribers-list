@@ -21,9 +21,11 @@ const SteamItem = ({ _id: id, name, date, favorite, updateFavSub }) => {
 
   return (
     <tr className="subs-row">
-      <td className="subs-row__item">{name}</td>
-      <td className="subs-row__item">Added: {`${timeAgo(date)}, ${date}`}</td>
-      <td className="subs-row__item">
+      <td className="subs-row__item item_name">{name}</td>
+      <td className="subs-row__item item_date_added">
+        Added: {`${timeAgo(date)}, ${date}`}
+      </td>
+      <td className="subs-row__item item_favorite">
         <button
           type="button"
           className="image-wrapper"

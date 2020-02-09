@@ -28,9 +28,9 @@ const SteamList = ({ subscribers, addSubLoading }) => {
         <StyledTable>
           <tbody>
             <tr className="subs-head">
-              <th className="subs-head__item">Name</th>
-              <th className="subs-head__item">Date Added</th>
-              <th className="subs-head__item">Favorite</th>
+              <th className="subs-head__item item_name">Name</th>
+              <th className="subs-head__item item_date_added">Date Added</th>
+              <th className="subs-head__item item_favorite">Favorite</th>
             </tr>
           </tbody>
         </StyledTable>

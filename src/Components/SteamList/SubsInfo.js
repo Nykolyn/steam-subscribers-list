@@ -13,32 +13,48 @@ function SubsInfo({
   lastYearAdded,
 }) {
   return (
-    <Content className="subs-length-wrap">
-      <p className="subs-length-text">
-        Today added:
+    <div className="subs-length-wrap">
+      <Content>
+        <p className="subs-length-text">Today added:</p>
         <span className="subs-length-text__num">{sameDayAdded}</span>
-      </p>
-      <p className="subs-length-text">
-        Added this week:
+      </Content>
+      <Content>
+        <p className="subs-length-text">Added this week:</p>
         <span className="subs-length-text__num">{sameWeekAdded}</span>
-      </p>
-      <p className="subs-length-text">
-        Added this month:
+      </Content>
+      <Content>
+        <p className="subs-length-text">Added this month:</p>
         <span className="subs-length-text__num">{sameMonthAdded}</span>
-      </p>
-      <p className="subs-length-text">
-        Added last year:
+      </Content>
+      <Content>
+        <p className="subs-length-text">Added last year:</p>
         <span className="subs-length-text__num">{lastYearAdded}</span>
-      </p>
-      <p className="subs-length-text">
-        Total:
+      </Content>
+      <Content>
+        <p className="subs-length-text">Total:</p>
         <span className="subs-length-text__num">{showTotalAmmountOfSubs}</span>
-      </p>
-    </Content>
+      </Content>
+    </div>
   );
 }
 
-const Content = styled.div``;
+const Content = styled.div`
+  display: flex;
+  padding: 14px;
+  border-radius: 10px;
+  transition: all 0.4s;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 24px;
+  justify-content: space-between;
+  width: 100%;
+  color: rgba(156, 146, 146, 0.616);
+  &:hover {
+    color: white;
+    transform: translateX(-10px) scale(1.1) rotateX(10deg);
+    box-shadow: 6px 6px 11px -2px rgba(107, 107, 107, 1);
+  }
+`;
 
 SubsInfo.defaultProps = {
   lastYearAdded: 0,

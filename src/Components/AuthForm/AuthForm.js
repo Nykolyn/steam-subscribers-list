@@ -62,7 +62,8 @@ const AuthForm = ({
     if (errorMsg) {
       clearAuthErrorMsg();
     }
-  }, [clearAuthErrorMsg]);
+  }, [errorMsg, clearAuthErrorMsg]);
+
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

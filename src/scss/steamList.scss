@@ -61,26 +61,6 @@
   justify-content: space-around;
   flex-wrap: wrap;
   flex-direction: column;
-  margin-bottom: 1em;
-
-  .subs-length-text {
-    font-size: 30px;
-    // letter-spacing: 4px;
-    // word-spacing: 4px;
-    transition: all .2s;
-    text-decoration: underline;
-    // font-family: 'Great Vibes', cursive;
-    color: rgba(156, 146, 146, 0.616);
-    margin-bottom: 20px;
-    &:hover {
-      color: #fff;
-    }
-
-    &__num {
-      margin-left: 10px;
-      color: #fff;
-    }
-  }
 }
 
 .subs-list {

@@ -3,9 +3,18 @@
     padding: 0 20px;
     width: 33%;
   }
-}
 
-.subs-body {
+  .item_name {
+    width: 40%;
+  }
+
+  .item_date_added {
+    width: 50%;
+  }
+
+  .item_favorite {
+    width: 10%;
+  }
 }
 
 .subs-row {
@@ -49,6 +58,18 @@
         background-position: center;
       }
     }
+  }
+
+  .item_name {
+    width: 40%;
+  }
+
+  .item_date_added {
+    width: 50%;
+  }
+
+  .item_favorite {
+    width: 10%;
   }
 
   &__item--loader {
