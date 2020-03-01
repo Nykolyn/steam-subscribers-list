@@ -45,7 +45,7 @@
     position: absolute;
     top: 50%;
     color: #fff;
-    transition: all 0.4s;
+    transition: all 0.2s;
     // right: 20%;
     transform: translateY(-50%);
   }
@@ -75,7 +75,7 @@
   align-items: flex-start;
   flex-wrap: wrap;
   position: relative;
-  transition: all 0.5s;
+  transition: all 0.2s;
   z-index: 3;
 
   &__item {
@@ -88,7 +88,7 @@
     transform: rotateX(50deg);
     padding: 1em;
     position: relative;
-    transition: all 0.5s;
+    transition: all 0.2s;
 
     display: flex;
     justify-content: space-between;

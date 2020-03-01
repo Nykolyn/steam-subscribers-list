@@ -5,6 +5,8 @@ import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import { Pagination } from 'antd';
 import 'react-toastify/dist/ReactToastify.css';
+import qs from 'query-string';
+import isEmpty from 'lodash/isEmpty';
 
 import SteamForm, {
   toastError,
@@ -19,7 +21,6 @@ import {
   addSubLoadSelector,
 } from '../redux/selectors/subscribtionSelectors';
 import { START_PAGE, PER_PAGE_SUCBSCRIPTIONS_LIST } from '../helpers/constants';
-// import Pagination from '../Components/SteamList/Pagination';
 import SubsInfo from '../Components/SteamList/SubsInfo';
 
 const filterSubs = (arr, query = '') =>
@@ -37,19 +38,34 @@ class Subscribers extends Component {
     perPage: PER_PAGE_SUCBSCRIPTIONS_LIST,
     currentPage: START_PAGE,
   };
+  /* eslint-disable */
 
   componentDidMount() {
-    const { isAuth, getSubs, ownerId } = this.props;
+    const { isAuth, getSubs, ownerId, location, history } = this.props;
+    const { currentPage, perPage } = this.state;
+    const parsed = qs.parse(location.search);
+
     if (!isAuth) return;
     getSubs(ownerId);
+
+    if (isEmpty(parsed)) {
+      history.replace({
+        ...location,
+        search: `currentPage=${currentPage}&perPage=${perPage}`,
+      });
+    }
+
+    if (parsed.currentPage) {
+      this.setState({ ...parsed });
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { query } = this.state;
-    const { subs } = this.props;
+    const { ownerId, getSubs } = this.props;
 
-    if (prevProps.subs !== subs && query) {
-      console.log('works');
+    if (prevProps.ownerId !== ownerId) {
+      getSubs(ownerId);
     }
 
     if (prevState.query !== query) {
@@ -109,7 +125,7 @@ class Subscribers extends Component {
   showFavorites = () =>
     this.setState(state => ({
       showFavorites: !state.showFavorites,
-      onChangeText: state.showFavorites ? 'Show favourites' : 'Show all',
+      onChangeText: state.showFavorites ? 'Favorites' : 'All',
     }));
 
   filteredSubs = (subs, query) => filterSubs(subs, query);
@@ -133,6 +149,12 @@ class Subscribers extends Component {
   };
 
   handleChangePage = name => {
+    const { history } = this.props;
+    const { perPage } = this.state;
+    history.push({
+      ...location,
+      search: `currentPage=${name}&perPage=${perPage}`,
+    });
     this.setState({
       currentPage: name,
     });
@@ -148,7 +170,7 @@ class Subscribers extends Component {
   };
 
   render() {
-    const { query, onChangeText, perPage } = this.state;
+    const { query, onChangeText, perPage, currentPage } = this.state;
     const { subsLoad } = this.props;
     return (
       <Content>
@@ -173,8 +195,8 @@ class Subscribers extends Component {
             <PaginationBlock>
               <Pagination
                 showQuickJumper
-                defaultCurrent={1}
-                defaultPageSize={perPage}
+                defaultCurrent={Number(currentPage)}
+                defaultPageSize={Number(perPage)}
                 total={this.renderSubsList().length}
                 onChange={this.handleChangePage}
               />
@@ -210,13 +232,17 @@ const List = styled.div`
   width: 60%;
 `;
 
+Subscribers.defaultProps = {
+  ownerId: null,
+};
+
 Subscribers.propTypes = {
   isAuth: PropTypes.bool.isRequired,
   getSubs: PropTypes.func.isRequired,
   addSub: PropTypes.func.isRequired,
   subs: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   subsLoad: PropTypes.bool.isRequired,
-  ownerId: PropTypes.string.isRequired,
+  ownerId: PropTypes.string,
 };
 
 const mapSTP = state => ({

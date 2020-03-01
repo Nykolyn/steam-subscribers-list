@@ -23,7 +23,7 @@ const SteamItem = ({ _id: id, name, date, favorite, updateFavSub }) => {
     <tr className="subs-row">
       <td className="subs-row__item item_name">{name}</td>
       <td className="subs-row__item item_date_added">
-        Added: {`${timeAgo(date)}, ${date}`}
+        {`${timeAgo(date)}, ${date}`}
       </td>
       <td className="subs-row__item item_favorite">
         <button

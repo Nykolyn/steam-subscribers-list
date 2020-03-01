@@ -1,10 +1,12 @@
 import React from 'react';
-import { HashRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import App from '../App';
 import MouseTrail from '../MouseTrail';
-import store from '../../redux/store';
+import configureStore from '../../helpers/configureStore';
+
+const store = configureStore();
 
 const Root = () => (
   <Provider store={store}>

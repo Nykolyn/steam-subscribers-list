@@ -22,5 +22,6 @@ export const dashboardRoutes = [
   {
     path: '/subscribtions',
     component: SubscribtionsRoute,
+    exact: true,
   },
 ];

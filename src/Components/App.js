@@ -1,5 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { Suspense } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -7,32 +6,12 @@ import styled from 'styled-components';
 import ProtectedComponent from '../HOC/ProtectedComponent';
 import { refreshUser } from '../redux/operations/authOperations';
 import { dashboardRoutes } from '../routes';
-import { getFromLS } from '../helpers/localStorage';
+
 import Navigation from './Navigation/Navigation';
 
 const AuthComponent = React.lazy(() => import('../Pages/Auth/Auth'));
 
-const App = ({ refreshUser }) => {
-  const [loading, setLoading] = useState(false);
-
-  const handleRefreshUser = async () => {
-    const token = getFromLS('token');
-    if (!token) return;
-
-    setLoading(true);
-    await refreshUser();
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
-
-  useEffect(
-    () => {
-      handleRefreshUser();
-    },
-    /* eslint-disable-next-line */
-    [],
-  );
+const App = () => {
   const renderDashboardRoutes = () => {
     return dashboardRoutes.map(route => (
       <ProtectedComponent
@@ -49,16 +28,8 @@ const App = ({ refreshUser }) => {
       <Navigation />
       <Suspense fallback={<div className="rainbow-marker-loader" />}>
         <Switch>
+          <Route path="/auth" component={AuthComponent} />
           {renderDashboardRoutes()}
-
-          {loading ? (
-            <>
-              <div className="rainbow-marker-loader" />
-            </>
-          ) : (
-            <Route path="/auth" component={AuthComponent} />
-          )}
-
           <Redirect to="/auth" />
         </Switch>
       </Suspense>
@@ -71,10 +42,6 @@ const Content = styled.div`
   position: relative;
   z-index: 3;
 `;
-
-App.propTypes = {
-  refreshUser: PropTypes.func.isRequired,
-};
 
 const mDTP = {
   refreshUser,

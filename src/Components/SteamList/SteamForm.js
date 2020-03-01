@@ -96,25 +96,35 @@ class SteamForm extends Component {
           className="sub-form__input"
           placeholder="User id"
         />
-          <input
-            type="text"
-            autoComplete="off"
-            value={query}
-            onBlur={() => onReset()}
-            autoFocus
-            placeholder={'filter sub here'}
-            name="query"
-            onChange={handleFilterSubs}
-            className="sub-form__input"
-          />
-        <ButtonWrapper>
+        <input
+          type="text"
+          autoComplete="off"
+          value={query}
+          onBlur={() => onReset()}
+          autoFocus
+          placeholder={'filter sub here'}
+          name="query"
+          onChange={handleFilterSubs}
+          className="sub-form__input"
+        />
+        <div className="multi-button">
+          <button type="submit">{loading ? 'Loading...' : 'Add'}</button>
+          <button
+            text={onChangeText}
+            type="button"
+            onClick={() => showFavorites()}
+          >
+            {onChangeText}
+          </button>
+        </div>
+        {/* <ButtonWrapper>
           <JellyButton text="Add new sub" loading={loading} type="submit" />
           <JellyButton
             text={onChangeText}
             type="button"
             onClick={() => showFavorites()}
           />
-        </ButtonWrapper>
+        </ButtonWrapper> */}
         <ToastContainer
           position="top-right"
           autoClose={4000}
