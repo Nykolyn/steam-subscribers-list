@@ -5,8 +5,6 @@ import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import { Pagination } from 'antd';
 import 'react-toastify/dist/ReactToastify.css';
-import qs from 'query-string';
-import isEmpty from 'lodash/isEmpty';
 
 import SteamForm, {
   toastError,
@@ -39,26 +37,6 @@ class Subscribers extends Component {
     currentPage: START_PAGE,
   };
   /* eslint-disable */
-
-  componentDidMount() {
-    const { isAuth, getSubs, ownerId, location, history } = this.props;
-    const { currentPage, perPage } = this.state;
-    const parsed = qs.parse(location.search);
-
-    if (!isAuth) return;
-    getSubs(ownerId);
-
-    if (isEmpty(parsed)) {
-      history.replace({
-        ...location,
-        search: `currentPage=${currentPage}&perPage=${perPage}`,
-      });
-    }
-
-    if (parsed.currentPage) {
-      this.setState({ ...parsed });
-    }
-  }
 
   componentDidUpdate(prevProps, prevState) {
     const { query } = this.state;
@@ -106,6 +84,7 @@ class Subscribers extends Component {
       const subToAdd = {
         favorite: false,
         date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+        visitedAt: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
         ...sub,
         ownerId,
       };
@@ -149,12 +128,6 @@ class Subscribers extends Component {
   };
 
   handleChangePage = name => {
-    const { history } = this.props;
-    const { perPage } = this.state;
-    history.push({
-      ...location,
-      search: `currentPage=${name}&perPage=${perPage}`,
-    });
     this.setState({
       currentPage: name,
     });
@@ -229,7 +202,7 @@ const Form = styled.div`
 
 const List = styled.div`
   position: relative;
-  width: 60%;
+  width: 66%;
 `;
 
 Subscribers.defaultProps = {

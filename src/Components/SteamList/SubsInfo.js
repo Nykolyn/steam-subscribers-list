@@ -10,7 +10,6 @@ function SubsInfo({
   sameDayAdded,
   sameWeekAdded,
   sameMonthAdded,
-  lastYearAdded,
 }) {
   return (
     <div className="subs-length-wrap">
@@ -25,10 +24,6 @@ function SubsInfo({
       <Content>
         <p className="subs-length-text">Added this month:</p>
         <span className="subs-length-text__num">{sameMonthAdded}</span>
-      </Content>
-      <Content>
-        <p className="subs-length-text">Added last year:</p>
-        <span className="subs-length-text__num">{lastYearAdded}</span>
       </Content>
       <Content>
         <p className="subs-length-text">Total:</p>
@@ -65,14 +60,12 @@ SubsInfo.propTypes = {
   sameDayAdded: PropTypes.number.isRequired,
   sameWeekAdded: PropTypes.number.isRequired,
   sameMonthAdded: PropTypes.number.isRequired,
-  lastYearAdded: PropTypes.number,
 };
 
 const mSTP = state => ({
   sameDayAdded: selectors.isSameDaySelector(state),
   sameWeekAdded: selectors.isSameWeekSelector(state),
   sameMonthAdded: selectors.isSameMonthSelector(state),
-  lastYearAdded: selectors.lastYearSelector(state),
 });
 
 export default connect(mSTP)(SubsInfo);

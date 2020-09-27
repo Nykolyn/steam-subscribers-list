@@ -2,24 +2,18 @@ import { combineReducers } from 'redux';
 
 import { SUBS_ACTIONS } from '../actions/subscribtionActions';
 import { AUTH_ACTIONS } from '../actions/authActions';
-import {
-  isSameDay,
-  isSameMonth,
-  isSameWeek,
-  isSameYear,
-} from '../../helpers/dateDiff';
+import { isSameDay, isSameMonth, isSameWeek } from '../../helpers/dateDiff';
 
 const loadingState = {
   getSubs: false,
   addSub: false,
-  updateFavSub: false,
+  updateSub: false,
 };
 
 const dateState = {
   sameDayAdded: 0,
   sameWeekAdded: 0,
   sameMonthAdded: 0,
-  lastYearAdded: 0,
 };
 
 const subs = (state = [], { type, payload }) => {
@@ -33,7 +27,7 @@ const subs = (state = [], { type, payload }) => {
     case SUBS_ACTIONS.ADD_SUB_SUCCESS:
       return [...state, payload.sub];
 
-    case SUBS_ACTIONS.UPDATE_FAV_SUB_SUCCESS: {
+    case SUBS_ACTIONS.UPDATE_SUB_SUCCESS: {
       const { updatedSub } = payload;
 
       const newState = state.map(sub =>
@@ -62,11 +56,11 @@ const loading = (state = loadingState, { type }) => {
     case SUBS_ACTIONS.ADD_SUB_ERROR:
       return { ...state, addSub: false };
 
-    case SUBS_ACTIONS.UPDATE_FAV_SUB_REQUEST:
-      return { ...state, updateFavSub: true };
-    case SUBS_ACTIONS.UPDATE_FAV_SUB_SUCCESS:
-    case SUBS_ACTIONS.UPDATE_FAV_SUB_ERROR:
-      return { ...state, updateFavSub: false };
+    case SUBS_ACTIONS.UPDATE_SUB_REQUEST:
+      return { ...state, updateSub: true };
+    case SUBS_ACTIONS.UPDATE_SUB_SUCCESS:
+    case SUBS_ACTIONS.UPDATE_SUB_ERROR:
+      return { ...state, updateSub: false };
 
     default:
       return state;
@@ -80,7 +74,6 @@ const date = (state = dateState, { type, payload }) => {
       let sameDay = 0;
       let sameMonth = 0;
       let sameWeek = 0;
-      let lastYear = 0;
 
       payload.subs.forEach(sub => {
         const subDate = sub.date.split(' ')[0];
@@ -94,16 +87,12 @@ const date = (state = dateState, { type, payload }) => {
         if (isSameWeek(date, subDate)) {
           sameWeek += 1;
         }
-        if (!isSameYear(date, subDate)) {
-          lastYear += 1;
-        }
       });
 
       return {
         sameDayAdded: sameDay,
         sameWeekAdded: sameWeek,
         sameMonthAdded: sameMonth,
-        lastYearAdded: lastYear,
       };
     }
     case SUBS_ACTIONS.ADD_SUB_SUCCESS:

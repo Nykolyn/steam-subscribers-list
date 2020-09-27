@@ -5,9 +5,9 @@ export const SUBS_ACTIONS = {
   ADD_SUB_REQUEST: 'ADD_SUB_REQUEST',
   ADD_SUB_SUCCESS: 'ADD_SUB_SUCCESS',
   ADD_SUB_ERROR: 'ADD_SUB_ERROR',
-  UPDATE_FAV_SUB_REQUEST: 'UPDATE_FAV_SUB_REQUEST',
-  UPDATE_FAV_SUB_SUCCESS: 'UPDATE_FAV_SUB_SUCCESS',
-  UPDATE_FAV_SUB_ERROR: 'UPDATE_FAV_SUB_ERROR',
+  UPDATE_SUB_REQUEST: 'UPDATE_SUB_REQUEST',
+  UPDATE_SUB_SUCCESS: 'UPDATE_SUB_SUCCESS',
+  UPDATE_SUB_ERROR: 'UPDATE_SUB_ERROR',
 };
 
 //
@@ -43,17 +43,16 @@ export const addSubError = error => ({
 //
 
 //
-export const updateFavSubStart = () => ({
-  type: SUBS_ACTIONS.UPDATE_FAV_SUB_REQUEST,
+export const updateSubStart = () => ({
+  type: SUBS_ACTIONS.UPDATE_SUB_REQUEST,
 });
 
-export const updateFavSubSuccess = updatedSub => ({
-  type: SUBS_ACTIONS.UPDATE_FAV_SUB_SUCCESS,
+export const updateSubSuccess = updatedSub => ({
+  type: SUBS_ACTIONS.UPDATE_SUB_SUCCESS,
   payload: { updatedSub },
 });
 
-export const updateFavSubError = error => ({
-  type: SUBS_ACTIONS.UPDATE_FAV_SUB_ERROR,
+export const updateSubError = error => ({
+  type: SUBS_ACTIONS.UPDATE_SUB_ERROR,
   payload: { error },
 });
-//

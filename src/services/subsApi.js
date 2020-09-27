@@ -9,7 +9,7 @@ export const getSubsApi = id =>
 export const postSubApi = sub =>
   axios.post(`${URL}/subscribers`, sub).then(response => response.data.newSub);
 
-export const updateFavApi = (id, sub) =>
+export const updateSubApi = ({ _id, ...sub }) =>
   axios
-    .patch(`${URL}/subscribers/updateSub/${id}`, sub)
+    .patch(`${URL}/subscribers/updateSub/${_id}`, sub)
     .then(response => response.data.updatedSub);

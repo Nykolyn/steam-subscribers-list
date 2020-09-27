@@ -1,16 +1,6 @@
 import setAuthToken from '../../helpers/setAuthToken';
-import {
-  subsRequestStart,
-  subsRequestSuccess,
-  subsRequestError,
-  addSubRequest,
-  addSubSuccess,
-  addSubError,
-  updateFavSubStart,
-  updateFavSubSuccess,
-  updateFavSubError,
-} from '../actions/subscribtionActions';
-import { getSubsApi, postSubApi, updateFavApi } from '../../services/subsApi';
+import * as subsActions from '../actions/subscribtionActions';
+import { getSubsApi, postSubApi, updateSubApi } from '../../services/subsApi';
 import { tokenSelector } from '../selectors/authSelectors';
 
 /* eslint-disable */
@@ -18,13 +8,13 @@ export const getSubs = id => async (dispatch, getState) => {
   const token = tokenSelector(getState());
   if (!token) return;
   setAuthToken(token);
-  dispatch(subsRequestStart());
+  dispatch(subsActions.subsRequestStart());
   try {
     const subs = await getSubsApi(id);
-    dispatch(subsRequestSuccess(subs));
+    dispatch(subsActions.subsRequestSuccess(subs));
   } catch (err) {
     console.error(`error while getting subs: ${err}`);
-    dispatch(subsRequestError(err));
+    dispatch(subsActions.subsRequestError(err));
   }
 };
 
@@ -32,27 +22,27 @@ export const addSub = sub => async (dispatch, getState) => {
   const token = tokenSelector(getState());
   if (!token) return;
   setAuthToken(token);
-  dispatch(addSubRequest());
+  dispatch(subsActions.addSubRequest());
 
   try {
     const newSub = await postSubApi(sub);
-    return dispatch(addSubSuccess(newSub));
+    return dispatch(subsActions.addSubSuccess(newSub));
   } catch (err) {
     console.error(`error while adding sub: ${err}`);
-    dispatch(addSubError(err));
+    dispatch(subsActions.addSubError(err));
   }
 };
 
-export const updateFavSub = (id, favorite) => async (dispatch, getState) => {
+export const updateSub = sub => async (dispatch, getState) => {
   const token = tokenSelector(getState());
   if (!token) return;
   setAuthToken(token);
-  dispatch(updateFavSubStart());
+  dispatch(subsActions.updateSubStart());
   try {
-    const sub = await updateFavApi(id, favorite);
-    return await dispatch(updateFavSubSuccess(sub));
+    const updatedSub = await updateSubApi(sub);
+    return await dispatch(subsActions.updateSubSuccess(updatedSub));
   } catch (err) {
-    dispatch(updateFavSubError(err));
-    console.error(`error while updating favorite sub: ${err}`);
+    dispatch(subsActions.updateSubError(err));
+    console.error(`error while updating sub: ${err}`);
   }
 };

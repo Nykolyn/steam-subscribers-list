@@ -29,6 +29,9 @@ const SteamList = ({ subscribers, addSubLoading }) => {
           <tbody>
             <tr className="subs-head">
               <th className="subs-head__item item_name">Name</th>
+              <th className="subs-head__item item_date_visited">
+                Last Visited
+              </th>
               <th className="subs-head__item item_date_added">Date Added</th>
               <th className="subs-head__item item_favorite">Favorite</th>
             </tr>
@@ -90,33 +93,6 @@ const TableContent = styled.div`
     background: #555;
   }
 `;
-
-// const SteamList = ({ subscribers, addSubLoading }) => {
-//   const [loading, setLoading] = useState(false);
-
-//   useEffect(() => {
-//     if (addSubLoading) {
-//       return setLoading(true);
-//     }
-
-//     return setLoading(false);
-//   }, [addSubLoading]);
-
-//   return (
-//     <ul className="subs-list">
-//       {loading && (
-//         <li className="subs-list__item--loader">
-//           <CircularProgress />
-//         </li>
-//       )}
-//       {subscribers.map(sub => (
-//         <li key={sub.userID} className="subs-list__item">
-//           <SteamItem {...sub} />
-//         </li>
-//       ))}
-//     </ul>
-//   );
-// };
 
 SteamList.propTypes = {
   subscribers: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,

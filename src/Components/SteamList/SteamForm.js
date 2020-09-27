@@ -100,7 +100,7 @@ class SteamForm extends Component {
           type="text"
           autoComplete="off"
           value={query}
-          onBlur={() => onReset()}
+          // onBlur={() => onReset()}
           autoFocus
           placeholder={'filter sub here'}
           name="query"
