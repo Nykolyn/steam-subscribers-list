@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
-import { Pagination } from 'antd';
+import { Modal, Pagination } from 'antd';
 import 'react-toastify/dist/ReactToastify.css';
 
 import SteamForm, {
@@ -35,6 +35,7 @@ class Subscribers extends Component {
     onChangeText: 'Show favourites',
     perPage: PER_PAGE_SUCBSCRIPTIONS_LIST,
     currentPage: START_PAGE,
+    preventSave: null,
   };
   /* eslint-disable */
 
@@ -70,34 +71,42 @@ class Subscribers extends Component {
   };
 
   handleSubmit = sub => {
-    const { isAuth, addSub, subs, ownerId } = this.props;
+    const { isAuth, subs } = this.props;
     if (!isAuth) return;
     const subAlreadyExists = subs.find(
       el =>
-        el.name.toLowerCase().trim() === sub.name.toLocaleLowerCase().trim() ||
-        el.userID === sub.userID.trim(),
+        el.name.toLowerCase().trim() === sub.name || el.userID === sub.userID,
     );
 
     if (subAlreadyExists) {
       toastError();
-    } else {
-      const subToAdd = {
-        favorite: false,
-        date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
-        visitedAt: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
-        ...sub,
-        ownerId,
-      };
-
-      addSub(subToAdd).then(res => {
-        if (!res) return toastError();
-
-        return toastSuccess(subs.length + 1);
-      });
+      this.setState({ preventSave: sub });
+      return;
     }
+
+    this.sendUserData(sub);
   };
 
-  handleFilterSubs = e => this.setState({ query: e.target.value });
+  sendUserData = sub => {
+    const { addSub, subs, ownerId } = this.props;
+    const date = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`;
+
+    const subToAdd = {
+      favorite: false,
+      date,
+      visitedAt: date,
+      ...sub,
+      ownerId,
+    };
+
+    return addSub(subToAdd).then(res => {
+      if (!res) return toastError();
+
+      return toastSuccess(subs.length + 1);
+    });
+  };
+
+  handleFilterSubs = e => this.setState({ query: e.target.value.trim() });
 
   filterFavorites = () => this.props.subs.filter(el => el.favorite);
 
@@ -177,6 +186,17 @@ class Subscribers extends Component {
           )}
           <ToastContainer />
         </List>
+        <Modal
+          title="Save Anyway?"
+          bodyStyle={{ padding: 0 }}
+          visible={Boolean(this.state.preventSave)}
+          onOk={() =>
+            this.sendUserData(this.state.preventSave).then(() =>
+              this.setState({ preventSave: null }),
+            )
+          }
+          onCancel={() => this.setState({ preventSave: null })}
+        />
       </Content>
     );
   }

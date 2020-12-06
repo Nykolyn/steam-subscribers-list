@@ -1,12 +1,8 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
-import JellyButton from '../Buttons/JellyButton';
-import ClearIcon from '@material-ui/icons/Clear';
-import IconButton from '@material-ui/core/IconButton';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { addSubLoadSelector } from '../../redux/selectors/subscribtionSelectors';
@@ -63,9 +59,16 @@ class SteamForm extends Component {
   handleFormSubmit = e => {
     e.preventDefault();
     const { name, userID } = this.state;
-    if (name.trim() === '' || userID.trim() === '') return this.warn();
+    const trimmedName = name.trim();
+    const trimmedUserId = userID.trim();
+
+    if (trimmedName === '' || trimmedUserId === '') {
+      this.warn();
+      return;
+    }
+
     if (userID.includes('/')) return this.warn('Forgot to remove "/" ');
-    this.props.handleSubmit(this.state);
+    this.props.handleSubmit({ name: trimmedName, userID: trimmedUserId });
     return this.setState({ name: '', userID: '' });
   };
 
@@ -106,7 +109,7 @@ class SteamForm extends Component {
           onBlur={() => {
             this.filterClearTimeout = setTimeout(() => {
               this.props.onReset();
-            }, 5000);
+            }, 10000);
           }}
           autoFocus
           placeholder={'filter sub here'}
