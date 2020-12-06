@@ -31,7 +31,7 @@ const subs = (state = [], { type, payload }) => {
       const { updatedSub } = payload;
 
       const newState = state.map(sub =>
-        sub.userID === updatedSub.userID ? updatedSub : sub,
+        sub._id === updatedSub._id ? updatedSub : sub,
       );
 
       return newState;

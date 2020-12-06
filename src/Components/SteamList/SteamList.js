@@ -16,7 +16,7 @@ const SteamList = ({ subscribers, addSubLoading }) => {
 
     return setLoading(false);
   }, [addSubLoading]);
-
+  console.log('subscribers', subscribers);
   return (
     subscribers.length > 0 && (
       <div>
@@ -41,7 +41,7 @@ const SteamList = ({ subscribers, addSubLoading }) => {
           <StyledTable>
             <tbody className="subs-body">
               {subscribers.map(sub => (
-                <SteamItem key={sub.userID} {...sub} />
+                <SteamItem key={sub._id} {...sub} />
               ))}
             </tbody>
           </StyledTable>

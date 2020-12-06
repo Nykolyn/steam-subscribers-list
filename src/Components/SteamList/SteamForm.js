@@ -42,6 +42,7 @@ class SteamForm extends Component {
   state = {
     name: '',
     userID: '',
+    focused: false,
   };
 
   warn = text =>
@@ -53,6 +54,8 @@ class SteamForm extends Component {
       pauseOnHover: true,
       draggable: true,
     });
+
+  filterClearTimeout;
 
   handleInputChange = ({ target: { name, value } }) =>
     this.setState({ [name]: value });
@@ -74,7 +77,6 @@ class SteamForm extends Component {
       showFavorites,
       onChangeText,
       loading,
-      onReset,
     } = this.props;
     return (
       <form onSubmit={this.handleFormSubmit} className="sub-form">
@@ -100,7 +102,12 @@ class SteamForm extends Component {
           type="text"
           autoComplete="off"
           value={query}
-          // onBlur={() => onReset()}
+          onFocus={() => clearTimeout(this.filterClearTimeout)}
+          onBlur={() => {
+            this.filterClearTimeout = setTimeout(() => {
+              this.props.onReset();
+            }, 5000);
+          }}
           autoFocus
           placeholder={'filter sub here'}
           name="query"
@@ -117,14 +124,6 @@ class SteamForm extends Component {
             {onChangeText}
           </button>
         </div>
-        {/* <ButtonWrapper>
-          <JellyButton text="Add new sub" loading={loading} type="submit" />
-          <JellyButton
-            text={onChangeText}
-            type="button"
-            onClick={() => showFavorites()}
-          />
-        </ButtonWrapper> */}
         <ToastContainer
           position="top-right"
           autoClose={4000}
@@ -140,12 +139,6 @@ class SteamForm extends Component {
     );
   }
 }
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-`;
 
 SteamForm.propTypes = {
   loading: PropTypes.bool.isRequired,

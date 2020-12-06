@@ -3,4 +3,10 @@ export const setToLS = (name, data) => {
   return localStorage.setItem(name, parsed);
 };
 export const clearFromLS = name => localStorage.removeItem(name);
-export const getFromLS = name => JSON.parse(localStorage.getItem(name));
+export const getFromLS = name => {
+  try {
+    return JSON.parse(localStorage.getItem(name));
+  } catch {
+    return localStorage.getItem(name);
+  }
+};
