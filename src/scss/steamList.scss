@@ -41,6 +41,15 @@
     }
   }
 
+  &__filter-input {
+    margin-bottom: 0;
+    border-bottom: none;
+
+    &:focus {
+      border-bottom: none;
+    }
+  }
+
   &__clear-button-wrapper {
     position: absolute;
     top: 50%;

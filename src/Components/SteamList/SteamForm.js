@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Box, LinearProgress } from '@material-ui/core';
 
 import { addSubLoadSelector } from '../../redux/selectors/subscribtionSelectors';
 
@@ -28,6 +29,8 @@ export const toastSuccess = length =>
   });
 
 class SteamForm extends Component {
+  filterClearTimeout;
+
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     handleFilterSubs: PropTypes.func.isRequired,
@@ -39,6 +42,7 @@ class SteamForm extends Component {
     name: '',
     userID: '',
     focused: false,
+    progress: 10,
   };
 
   warn = text =>
@@ -50,8 +54,6 @@ class SteamForm extends Component {
       pauseOnHover: true,
       draggable: true,
     });
-
-  filterClearTimeout;
 
   handleInputChange = ({ target: { name, value } }) =>
     this.setState({ [name]: value });
@@ -105,18 +107,34 @@ class SteamForm extends Component {
           type="text"
           autoComplete="off"
           value={query}
-          onFocus={() => clearTimeout(this.filterClearTimeout)}
+          onFocus={() => {
+            this.setState({ progress: 10 });
+            clearTimeout(this.filterClearTimeout);
+          }}
           onBlur={() => {
-            this.filterClearTimeout = setTimeout(() => {
-              this.props.onReset();
-            }, 10000);
+            this.filterClearTimeout = setInterval(async () => {
+              if (!this.state.progress) {
+                this.props.onReset();
+                this.setState({ progress: 10 });
+                clearTimeout(this.filterClearTimeout);
+                return;
+              }
+
+              await this.setState(state => ({ progress: state.progress - 1 }));
+            }, 1000);
           }}
           autoFocus
           placeholder={'filter sub here'}
           name="query"
           onChange={handleFilterSubs}
-          className="sub-form__input"
+          className="sub-form__input sub-form__filter-input"
         />
+        <Box width="100%" mb="10px">
+          <LinearProgress
+            variant="determinate"
+            value={this.state.progress * 10}
+          />
+        </Box>
         <div className="multi-button">
           <button type="submit">{loading ? 'Loading...' : 'Add'}</button>
           <button
