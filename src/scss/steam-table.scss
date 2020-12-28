@@ -88,6 +88,10 @@
   }
 }
 
+.no-id-row {
+  border: 1px solid red;
+}
+
 @keyframes heartBeat {
   0% {
     transform: scale(1);

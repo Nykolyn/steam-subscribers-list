@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { Tooltip } from 'antd';
+import moment from 'moment';
 
 import { updateSub } from '../../redux/operations/subscribtionsOperations';
 import { timeAgo } from '../../helpers/dateDiff';
@@ -77,7 +78,7 @@ const SteamItem = ({
   };
 
   return (
-    <tr className="subs-row">
+    <tr className={`subs-row ${!userID ? 'no-id-row' : null}`}>
       <Tooltip title={userID} color="#fff">
         <td className="subs-row__item item_name">
           <Box
@@ -119,7 +120,10 @@ const SteamItem = ({
       <td className="subs-row__item item_date_visited">
         {visitedAt ? (
           <>
-            {timeAgo(visitedAt)}
+            {`${timeAgo(visitedAt)}, ${moment(
+              visitedAt.split(' ')[0],
+              moment.defaultFormat,
+            ).format('D MMM YYYY')}`}
             <IconButton
               disabled={loadingVisitedAt}
               onClick={handleUpdateVisitedAt}
